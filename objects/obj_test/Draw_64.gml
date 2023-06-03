@@ -1,0 +1,1 @@
+draw_text(8, 8,string(decals.GetSize()) + "\n"+string(decals.GetMax()));
