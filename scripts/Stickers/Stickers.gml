@@ -98,8 +98,9 @@ function Stickers(_max, _distribute = true) constructor {
 				__spriteCache[_spr] = sprite_get_info(_spr);
 				var _j = _len;
 				repeat(array_length(__spriteCache)-_len) {
-					if (is_real(__spriteCache[_j])) {
+					if (!is_struct(__spriteCache[_j])) {
 						__spriteCache[_j] = undefined;	
+						++_j;
 					}
 				}
 			} else {
