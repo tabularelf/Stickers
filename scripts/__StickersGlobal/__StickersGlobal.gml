@@ -1,6 +1,6 @@
 #macro __STICKERS_VFORMAT_SIZE 24*6
 #macro __STICKERS_CREDITS "@TabularElf - https://tabelf.link/"
-#macro __STICKERS_VERSION "v0.0.2"
+#macro __STICKERS_VERSION "v0.0.3"
 
 /// @ignore
 function __StickersGlobal() {
