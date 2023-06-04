@@ -2,6 +2,7 @@
 #macro __STICKERS_CREDITS "@TabularElf - https://tabelf.link/"
 #macro __STICKERS_VERSION "v0.0.2"
 
+/// @ignore
 function __StickersGlobal() {
 	static _inst = undefined;
 	

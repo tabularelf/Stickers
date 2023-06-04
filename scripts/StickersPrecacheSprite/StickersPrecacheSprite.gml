@@ -1,3 +1,5 @@
+/// @func StickersPrecacheSprite
+/// @param {Asset.GMSprite} sprites...
 function StickersPrecacheSprite() {
 	var _i = 0;
 	repeat(argument_count) {

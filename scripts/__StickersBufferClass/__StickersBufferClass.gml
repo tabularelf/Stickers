@@ -1,4 +1,5 @@
-function __StickersBuffer(_max, _texID, _x, _y, _owner) constructor {
+/// @ignore
+function __StickersBufferClass(_max, _texID, _x, _y, _owner) constructor {
 	static __vFormat = __StickersVFormat();
 	__owner = _owner;
 	__texID = _texID;
@@ -35,6 +36,7 @@ function __StickersBuffer(_max, _texID, _x, _y, _owner) constructor {
 	}
 	
 	static __Draw = function() {
+		//draw_rectangle(__x, __y, __owner.__regionWidth, __owner.__regionHeight, true);
 		if (__vbuffer != -1) vertex_submit(__vbuffer, pr_trianglelist, __texID);	
 	}
 }

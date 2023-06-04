@@ -1,3 +1,4 @@
+/// @ignore
 function __StickersSpriteStruct(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth) constructor {
 		sprite = _spr;
 		image = _img;

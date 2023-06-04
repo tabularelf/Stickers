@@ -11,8 +11,8 @@ if (mouse_check_button(mb_left)) {
 var _hspd = -keyboard_check(ord("A")) + keyboard_check(ord("D"));
 var _vspd = -keyboard_check(ord("W")) + keyboard_check(ord("S"));
 
-x += _hspd*4;
-y += _vspd*4;
+x += _hspd*16;
+y += _vspd*16;
 camera_set_view_pos(view_camera[0], x, y);
 
 if (mouse_wheel_up()) {

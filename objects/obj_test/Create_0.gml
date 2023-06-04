@@ -1,6 +1,6 @@
-decals = new Stickers(1024).SetRegionSize(32, 32).SetFreeze(false);
+decals = new Stickers(1024, false).SetRegionSize(1024, 1024);
 repeat(decals.GetMax()/10) {
-	decals.Add(spr_smile, 0, irandom(decals.GetRegionWidth()*500), irandom(decals.GetRegionHeight()*500));	
+	decals.Add(spr_smile, 0, irandom(decals.GetRegionWidth()), irandom(decals.GetRegionHeight()));	
 }
 //decals.SetFreeze(false);
 //decals.Update();

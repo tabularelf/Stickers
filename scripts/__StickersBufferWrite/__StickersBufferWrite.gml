@@ -1,3 +1,4 @@
+/// @ignore
 function __StickersBufferWrite(_buffer, _xy, _z, _left, _top, _right, _bottom, _colour, _alphaValue) {
 	var _red = color_get_red(_colour[0]), _green = color_get_green(_colour[0]), _blue = color_get_blue(_colour[0]);
 	var _alpha = _alphaValue*255;

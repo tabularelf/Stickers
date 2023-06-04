@@ -1,3 +1,4 @@
+/// @ignore
 function __StickersCacheSprite(_spr) {
 	static _global = __StickersGlobal();
 	var _info = sprite_get_info(_spr);

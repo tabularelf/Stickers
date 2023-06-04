@@ -1,5 +1,4 @@
-// Script assets have changed for v2.3.0 see
-// https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
+/// @ignore
 function __StickersSpritePrep(_vbuffer, _imageData, _index, _x, _y, _z, _widthValue, _heightValue, _angleValue, _colourValue, _alpha) {
 	var _uvs = sprite_get_uvs(_imageData, _index);
 	

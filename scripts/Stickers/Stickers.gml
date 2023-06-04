@@ -1,5 +1,5 @@
-/// @func Stickers(max_stickers, [distribute])
-/// @param {Real} max_stickers
+/// @func Stickers(maxStickers, [distribute])
+/// @param {Real} maxStickers
 /// @param {Bool} distribute
 function Stickers(_max, _distribute = true) constructor {
 	static _global = __StickersGlobal();
@@ -25,6 +25,7 @@ function Stickers(_max, _distribute = true) constructor {
 		return array_length(__vbArray)*__maxDistributeSize;	
 	}
 	
+	/// @param {Bool} freeze
 	static SetFreeze = function(_freeze) {
 		if (__freeze = _freeze) return self;
 		__freeze = _freeze;	
@@ -38,12 +39,16 @@ function Stickers(_max, _distribute = true) constructor {
 		return self;
 	}
 	
+	/// @param {Real} width
+	/// @param {Real} height
 	static SetPadding = function(_width, _height) {
 		__paddingWidth = __paddingWidth;
 		__paddingHeight = __paddingHeight;
 		return self;
 	}
 	
+	/// @param {Real} width
+	/// @param {Real} height
 	static SetRegionSize = function(_width, _height) {
 		if (__regionWidth == _width) && (__regionHeight == _height) return self;
 		var _oldWidth = __regionWidth;
@@ -74,6 +79,7 @@ function Stickers(_max, _distribute = true) constructor {
 		return __maxStickers;	
 	}
 	
+	/// @param {Real} maxStickers
 	static SetMax = function(_max) {
 		if (__maxStickers == _max) return self;
 		if (_max <= 0) {
@@ -91,6 +97,11 @@ function Stickers(_max, _distribute = true) constructor {
 		}
 	}
 	
+	/// @param {Asset.GMSprite} sprite
+	/// @param {Real} image
+	/// @param {Real} x
+	/// @param {Real} y
+	/// @param {Real} depth
 	static Add = function(_spr, _img, _x, _y, _depth = 0) {
 		var _inst = __StickersGetSpriteStruct();
 		_inst.Update(_spr, _img, _x, _y, 1, 1, 0, c_white, 1, _depth);
@@ -99,6 +110,15 @@ function Stickers(_max, _distribute = true) constructor {
 		return self;
 	}
 	
+	/// @param {Asset.GMSprite} sprite
+	/// @param {Real} image
+	/// @param {Real} x
+	/// @param {Real} y
+	/// @param {Real} xScale
+	/// @param {Real} yScale
+	/// @param {Constant.Colour} color
+	/// @param {Real} alpha
+	/// @param {Real} depth
 	static AddExt = function(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth = 0) {
 		var _inst = __StickersGetSpriteStruct();
 		_inst.Update(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
@@ -149,7 +169,7 @@ function Stickers(_max, _distribute = true) constructor {
 			}
 			
 			if (_vb == undefined) {
-				_vb = new __StickersBuffer(__distribute ? 1 : __maxSize, _texID, _x, _y, self);
+				_vb = new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, _x, _y, self);
 				array_push(__vbArray, _vb);
 				if (__distribute) {
 					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE;
@@ -188,15 +208,13 @@ function Stickers(_max, _distribute = true) constructor {
 		//Render nothing if Window isn't visible
 		if (window_get_width() == 0) || (window_get_height() == 0) return;
 		var _i = 0;
-		var _xCell = (_x div __regionWidth) * __regionWidth;
-		var _yCell = (_y div __regionHeight) * __regionHeight;
-		var _wCell = _xCell + ((_width div __regionWidth) * __regionWidth)+__paddingWidth;
-		var _hCell = _yCell + ((_height div __regionHeight) * __regionHeight)+__paddingHeight;
-		_xCell -= __paddingWidth;
-		_yCell -= __paddingHeight;
+		var _xCell = ((_x div __regionWidth) * __regionWidth);
+		var _yCell = ((_y div __regionHeight) * __regionHeight);
+		var _wCell = _xCell + _width + (__regionWidth div 2) /*((_width div __regionWidth) * __regionWidth)*/ + __paddingWidth;
+		var _hCell = _yCell + _height + (__regionHeight div 2) /**((_height div __regionWidth) * __regionWidth)*/ + __paddingHeight;
 		repeat(array_length(__vbArray)) {
 			var _entry = __vbArray[_i];
-			if ((_entry.__x >= _xCell) && (_entry.__x <= _wCell)) && ((_entry.__y >= _yCell) && (_entry.__y <= _hCell)) {
+			if ((_entry.__x >= _xCell) && (_entry.__x-__paddingWidth <= _wCell)) && ((_entry.__y >= _yCell) && (_entry.__y-__paddingHeight <= _hCell)) {
 				_entry.__Draw();
 			}
 			++_i;

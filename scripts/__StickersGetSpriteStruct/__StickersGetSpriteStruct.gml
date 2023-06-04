@@ -1,3 +1,4 @@
+/// @ignore
 function __StickersGetSpriteStruct() {
 	static _global = __StickersGlobal();
 	if (array_length(_global.spriteList) > 0) {
