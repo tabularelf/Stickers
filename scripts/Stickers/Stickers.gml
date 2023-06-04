@@ -19,7 +19,7 @@ function Stickers(_max, _distribute = true) constructor {
 	__paddingWidth = 128;
 	__paddingHeight = 128;
 	array_resize(__stickers, 0);
-	static __spriteCache = __StickersGlobal().spriteCache;
+	static __global = __StickersGlobal();
 	
 	static GetSize = function() {
 		return array_length(__vbArray)*__maxDistributeSize;	
@@ -150,11 +150,12 @@ function Stickers(_max, _distribute = true) constructor {
 		repeat(array_length(__stickers)) {
 			var _inst = __stickers[_i];
 			var _spr = _inst.sprite;
-			if (_spr > array_length(__spriteCache)-1) || (!is_struct(__spriteCache[_spr])) {
-				__spriteCache[_spr] = __StickersCacheSprite(_spr);
+			var _sprName = sprite_get_name(_spr);
+			if (!variable_struct_exists(__global.spriteCache, _sprName)) {
+				__global.spriteCache[$ _sprName] = __StickersCacheSprite(_spr);
 			}
 			
-			var _struct = __spriteCache[_spr];
+			var _struct = __global.spriteCache[$ _sprName];
 			var _texID = _struct.texIDs[_inst.image % _struct.numFrames];
 			var _x = (_inst.x div __regionWidth) * __regionWidth;
 			var _y = (_inst.y div __regionHeight) * __regionHeight;

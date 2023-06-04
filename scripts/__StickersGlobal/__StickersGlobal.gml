@@ -9,7 +9,7 @@ function __StickersGlobal() {
 	if (_inst == undefined) {
 		_inst = {
 			spriteList: [],
-			spriteCache: []
+			spriteCache: {}
 		}	
 		
 		var _tags = tag_get_asset_ids("StickerDecal", asset_sprite);
@@ -18,6 +18,6 @@ function __StickersGlobal() {
 	
 	return _inst;
 }
-
+global.StickersGlobal = __StickersGlobal();
 
 show_debug_message("Stickers: " + __STICKERS_VERSION + " initialized! By " + __STICKERS_CREDITS);

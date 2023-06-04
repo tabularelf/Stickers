@@ -27,4 +27,8 @@ if (mouse_check_button_pressed(mb_right)) {
 	decals.Clear();
 }
 
+if (keyboard_check_released(ord("R"))) {
+	StickersClearCache();	
+}
+
 decals.Update();
