@@ -49,7 +49,7 @@ function Stickers(_max, _distribute = true) constructor {
 	
 	/// @param {Real} width
 	/// @param {Real} height
-	static SetRegionSize = function(_width, _height) {
+	static SetRegion = function(_width, _height) {
 		if (__regionWidth == _width) && (__regionHeight == _height) return self;
 		var _oldWidth = __regionWidth;
 		var _oldHeight = __regionHeight;
