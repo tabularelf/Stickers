@@ -1,5 +1,5 @@
 function __StickersBuffer(_max, _texID, _owner) constructor {
-	static __vFormat = __StickerVFormat();
+	static __vFormat = __StickersVFormat();
 	__owner = _owner;
 	__texID = _texID;
 	__cacheDirty = false;

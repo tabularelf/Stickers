@@ -1,6 +1,8 @@
-decals = new Stickers(2, true);
-decals.Add(spr_smile, 0, 128, 128);
-decals.SetFreeze(false);
+decals = new Stickers(1024, true);
+repeat(128) {
+	decals.Add(spr_smile, 0, irandom(512), irandom(512));	
+}
+//decals.SetFreeze(false);
 //decals.Update();
 gpu_set_zwriteenable(true);
 gpu_set_ztestenable(true);

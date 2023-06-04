@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "__StickersBufferWrite",
+  "name": "__StickersCacheSprite",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {

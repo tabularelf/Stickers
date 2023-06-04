@@ -68,7 +68,10 @@
   ],
   "nineSlice": null,
   "parent": {
-    "name": "Stickers",
-    "path": "Stickers.yyp",
+    "name": "Decals",
+    "path": "folders/Test/Sprites/Decals.yy",
   },
+  "tags": [
+    "StickerDecal",
+  ],
 }

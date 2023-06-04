@@ -1,4 +1,4 @@
-function __StickerVFormat() {
+function __StickersVFormat() {
 	static _vFormat = undefined;
 	if (is_undefined(_vFormat)) {
 		vertex_format_begin();

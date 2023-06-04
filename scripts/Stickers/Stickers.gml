@@ -15,7 +15,7 @@ function Stickers(_max, _distribute = true) constructor {
 	__maxDistributeSize = __maxSize;
 	__update = false;
 	array_resize(__stickers, 0);
-	static __spriteCache = [];
+	static __spriteCache = __StickersGlobal().spriteCache;
 	
 	static GetSize = function() {
 		return array_length(__vbArray)*__maxDistributeSize;	
@@ -80,7 +80,7 @@ function Stickers(_max, _distribute = true) constructor {
 		
 		_i = 0;
 		repeat(array_length(__stickers)) {
-			array_push(_global.__StickersSpriteList, __stickers[_i]);
+			array_push(_global.spriteList, __stickers[_i]);
 			++_i;
 		}
 		array_resize(__stickers, 0);
@@ -93,24 +93,12 @@ function Stickers(_max, _distribute = true) constructor {
 		repeat(array_length(__stickers)) {
 			var _inst = __stickers[_i];
 			var _spr = _inst.sprite;
-			if (_spr > array_length(__spriteCache)-1) {
-				var _len = array_length(__spriteCache);
-				__spriteCache[_spr] = sprite_get_info(_spr);
-				var _j = _len;
-				repeat(array_length(__spriteCache)-_len) {
-					if (!is_struct(__spriteCache[_j])) {
-						__spriteCache[_j] = undefined;	
-						++_j;
-					}
-				}
-			} else {
-				if (__spriteCache[_spr] == undefined) {
-					__spriteCache[_spr] = sprite_get_info(_spr);	
-				}
+			if (_spr > array_length(__spriteCache)-1) || (!is_struct(__spriteCache[_spr])) {
+				__spriteCache[_spr] = __StickersCacheSprite(_spr);
 			}
 			
 			var _struct = __spriteCache[_spr];
-			var _texID = _struct.frames[_inst.image % _struct.num_subimages].texture;
+			var _texID = _struct.texIDs[_inst.image % _struct.numFrames];
 			var _j = 0;
 			var _vb = undefined;
 			repeat(array_length(__vbArray)) {
@@ -139,7 +127,7 @@ function Stickers(_max, _distribute = true) constructor {
 			}
 			__StickersSpritePrep(_vb.__buffer, _inst.sprite, _inst.image, _inst.x, _inst.y, _inst.depth, _inst.xScale, _inst.yScale, _inst.angle, _inst.colour, _inst.alpha);
 			_vb.__cacheDirty = true;
-			array_push(_global.__StickersSpriteList, __stickers[_i]);
+			array_push(_global.spriteList, __stickers[_i]);
 			++_i;
 		}
 		
@@ -154,6 +142,8 @@ function Stickers(_max, _distribute = true) constructor {
 	}	
 	
 	static Draw = function() {
+		//Render nothing if Window isn't visible
+		if (window_get_width() == 0) || (window_get_height() == 0) return;
 		var _i = 0;
 		repeat(array_length(__vbArray)) {
 			__vbArray[_i].__Draw();

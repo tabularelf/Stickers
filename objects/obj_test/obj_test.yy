@@ -33,7 +33,7 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "Stickers",
-    "path": "Stickers.yyp",
+    "name": "Test",
+    "path": "folders/Test.yy",
   },
 }

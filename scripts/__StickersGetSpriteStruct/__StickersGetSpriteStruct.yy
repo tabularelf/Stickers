@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Stickers",
-    "path": "folders/Stickers.yy",
+    "name": "I'm shy :(",
+    "path": "folders/Stickers/System/Please don't look/I'm shy :(.yy",
   },
 }

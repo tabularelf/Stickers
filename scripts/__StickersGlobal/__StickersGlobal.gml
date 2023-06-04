@@ -3,8 +3,16 @@
 #macro __STICKERS_VERSION "v0.0.2"
 
 function __StickersGlobal() {
-	static _inst = {
-		__StickersSpriteList: []
+	static _inst = undefined;
+	
+	if (_inst == undefined) {
+		_inst = {
+			spriteList: [],
+			spriteCache: []
+		}	
+		
+		var _tags = tag_get_asset_ids("StickerDecal", asset_sprite);
+		script_execute_ext(StickersPrecacheSprite, _tags);
 	}
 	
 	return _inst;
