@@ -16,7 +16,7 @@
   "bbox_bottom": 31,
   "HTile": false,
   "VTile": false,
-  "For3D": true,
+  "For3D": false,
   "DynamicTexturePage": false,
   "width": 32,
   "height": 32,

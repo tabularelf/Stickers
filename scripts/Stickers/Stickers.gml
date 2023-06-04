@@ -14,6 +14,10 @@ function Stickers(_max, _distribute = true) constructor {
 	__distribute = _distribute;
 	__maxDistributeSize = __maxSize;
 	__update = false;
+	__regionWidth = 1024;
+	__regionHeight = 1024;
+	__paddingWidth = 128;
+	__paddingHeight = 128;
 	array_resize(__stickers, 0);
 	static __spriteCache = __StickersGlobal().spriteCache;
 	
@@ -22,15 +26,48 @@ function Stickers(_max, _distribute = true) constructor {
 	}
 	
 	static SetFreeze = function(_freeze) {
+		if (__freeze = _freeze) return self;
 		__freeze = _freeze;	
 		var _i = 0;
 		repeat(array_length(__vbArray)) {
 			var _entry = __vbArray[_i];
 			_entry.__cacheDirty = true;
 			_entry.__Update();
-			
 			++_i;
 		}
+		return self;
+	}
+	
+	static SetPadding = function(_width, _height) {
+		__paddingWidth = __paddingWidth;
+		__paddingHeight = __paddingHeight;
+		return self;
+	}
+	
+	static SetRegionSize = function(_width, _height) {
+		if (__regionWidth == _width) && (__regionHeight == _height) return self;
+		var _oldWidth = __regionWidth;
+		var _oldHeight = __regionHeight;
+		__regionWidth = _width;
+		__regionHeight = _height;
+		var _i = 0;
+		repeat(array_length(__vbArray)) {
+			var _entry = __vbArray[_i];
+			var _x = (_entry.__x div _width) * _width;
+			var _y = (_entry.__y div _height) * _height;
+			_entry.__x = _x;
+			_entry.__y = _y;
+			++_i;
+		}
+		 return self;
+	}
+	
+	static GetRegionWidth = function() {
+		return __regionWidth;
+	}
+	
+	static GetRegionHeight = function() {
+		return __regionHeight;
 	}
 	
 	static GetMax = function() {
@@ -99,10 +136,12 @@ function Stickers(_max, _distribute = true) constructor {
 			
 			var _struct = __spriteCache[_spr];
 			var _texID = _struct.texIDs[_inst.image % _struct.numFrames];
+			var _x = (_inst.x div __regionWidth) * __regionWidth;
+			var _y = (_inst.y div __regionHeight) * __regionHeight;
 			var _j = 0;
 			var _vb = undefined;
 			repeat(array_length(__vbArray)) {
-				if (__vbArray[_j].__texID == _texID) {
+				if (__vbArray[_j].__texID == _texID) && (__vbArray[_j].__x = _x) && (__vbArray[_j].__y = _y) {
 					_vb = __vbArray[_j];
 					break;
 				}
@@ -110,7 +149,7 @@ function Stickers(_max, _distribute = true) constructor {
 			}
 			
 			if (_vb == undefined) {
-				_vb = new __StickersBuffer(__distribute ? 1 : __maxSize, _texID, self);
+				_vb = new __StickersBuffer(__distribute ? 1 : __maxSize, _texID, _x, _y, self);
 				array_push(__vbArray, _vb);
 				if (__distribute) {
 					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE;
@@ -141,12 +180,25 @@ function Stickers(_max, _distribute = true) constructor {
 		__update = false;
 	}	
 	
-	static Draw = function() {
+	/// @param {Real} x
+	/// @param {Real} y
+	/// @param {Real} width
+	/// @param {Real} height
+	static Draw = function(_x = camera_get_view_x(view_camera[view_current]), _y = camera_get_view_y(view_camera[view_current]), _width = camera_get_view_width(view_camera[view_current]), _height = camera_get_view_height(view_camera[view_current])) {
 		//Render nothing if Window isn't visible
 		if (window_get_width() == 0) || (window_get_height() == 0) return;
 		var _i = 0;
+		var _xCell = (_x div __regionWidth) * __regionWidth;
+		var _yCell = (_y div __regionHeight) * __regionHeight;
+		var _wCell = _xCell + ((_width div __regionWidth) * __regionWidth)+__paddingWidth;
+		var _hCell = _yCell + ((_height div __regionHeight) * __regionHeight)+__paddingHeight;
+		_xCell -= __paddingWidth;
+		_yCell -= __paddingHeight;
 		repeat(array_length(__vbArray)) {
-			__vbArray[_i].__Draw();
+			var _entry = __vbArray[_i];
+			if ((_entry.__x >= _xCell) && (_entry.__x <= _wCell)) && ((_entry.__y >= _yCell) && (_entry.__y <= _hCell)) {
+				_entry.__Draw();
+			}
 			++_i;
 		}
 	}

@@ -1,7 +1,9 @@
-function __StickersBuffer(_max, _texID, _owner) constructor {
+function __StickersBuffer(_max, _texID, _x, _y, _owner) constructor {
 	static __vFormat = __StickersVFormat();
 	__owner = _owner;
 	__texID = _texID;
+	__x = _x;
+	__y = _y;
 	__cacheDirty = false;
 	__buffer = buffer_create(_max, buffer_fixed, 1);
 	__vbuffer = -1;
