@@ -1,5 +1,7 @@
-/// @func Stickers(max_stickers)
-function Stickers(_max = 1024) constructor {
+/// @func Stickers(max_stickers, [distribute])
+/// @param {Real} max_stickers
+/// @param {Bool} distribute
+function Stickers(_max, _distribute = true) constructor {
 	static _global = __StickersGlobal();
 	if (_max <= 0) {
 		__StickersError("Max stickers cannot be less than 1!");
@@ -9,7 +11,7 @@ function Stickers(_max = 1024) constructor {
 	__vbArray = [];
 	__stickers = array_create(_max); // Initial Buffer
 	__freeze = true;
-	__distribute = false;
+	__distribute = _distribute;
 	__maxDistributeSize = __maxSize;
 	__update = false;
 	array_resize(__stickers, 0);
@@ -17,6 +19,18 @@ function Stickers(_max = 1024) constructor {
 	
 	static GetSize = function() {
 		return array_length(__vbArray)*__maxDistributeSize;	
+	}
+	
+	static SetFreeze = function(_freeze) {
+		__freeze = _freeze;	
+		var _i = 0;
+		repeat(array_length(__vbArray)) {
+			var _entry = __vbArray[_i];
+			_entry.__cacheDirty = true;
+			_entry.__Update();
+			
+			++_i;
+		}
 	}
 	
 	static GetMax = function() {
@@ -28,9 +42,9 @@ function Stickers(_max = 1024) constructor {
 		if (_max <= 0) {
 			__StickersError("Max stickers cannot be less than 1!");
 		}
-		__maxStickers = max(_max, array_length(__vbArray));	
+		__maxStickers = _max;	
 		__maxSize = __maxStickers*__STICKERS_VFORMAT_SIZE;
-		__maxDistributeSize = __distribute ? (max(ceil(__maxSize / array_length(__vbArray)), __STICKERS_VFORMAT_SIZE)) : __maxSize;
+		__maxDistributeSize = __distribute ? (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE : __maxSize;
 		var _i = 0;
 		repeat(array_length(__vbArray)) {
 			buffer_resize(__vbArray[_i].__buffer, __maxDistributeSize);
@@ -38,11 +52,6 @@ function Stickers(_max = 1024) constructor {
 			__vbArray[_i].__Update();
 			++_i;	
 		}
-	}
-	
-	static SetFreeze = function(_freeze) {
-		__freeze = _freeze;	
-		return self;
 	}
 	
 	static Add = function(_spr, _img, _x, _y, _depth = 0) {
@@ -85,11 +94,22 @@ function Stickers(_max = 1024) constructor {
 			var _inst = __stickers[_i];
 			var _spr = _inst.sprite;
 			if (_spr > array_length(__spriteCache)-1) {
-				__spriteCache[_spr] = sprite_get_info(_spr);	
+				var _len = array_length(__spriteCache);
+				__spriteCache[_spr] = sprite_get_info(_spr);
+				var _j = _len;
+				repeat(array_length(__spriteCache)-_len) {
+					if (is_real(__spriteCache[_j])) {
+						__spriteCache[_j] = undefined;	
+					}
+				}
+			} else {
+				if (__spriteCache[_spr] == undefined) {
+					__spriteCache[_spr] = sprite_get_info(_spr);	
+				}
 			}
 			
 			var _struct = __spriteCache[_spr];
-			var _texID = _struct.frames[_inst.image].texture;
+			var _texID = _struct.frames[_inst.image % _struct.num_subimages].texture;
 			var _j = 0;
 			var _vb = undefined;
 			repeat(array_length(__vbArray)) {
@@ -101,10 +121,10 @@ function Stickers(_max = 1024) constructor {
 			}
 			
 			if (_vb == undefined) {
-				_vb = new __StickersBuffer(__distribute ? 1 : __maxSize, _texID);
+				_vb = new __StickersBuffer(__distribute ? 1 : __maxSize, _texID, self);
 				array_push(__vbArray, _vb);
 				if (__distribute) {
-					__maxDistributeSize = max(ceil(__maxSize div array_length(__vbArray)), __maxSize);
+					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE;
 					var _k = 0;
 					repeat(array_length(__vbArray)) {
 						buffer_resize(__vbArray[_k].__buffer, __maxDistributeSize);
@@ -126,7 +146,7 @@ function Stickers(_max = 1024) constructor {
 		
 		_i = 0;
 		repeat(array_length(__vbArray)) {
-			__vbArray[_i].__Update(__freeze);
+			__vbArray[_i].__Update();
 			++_i;
 		}
 		__update = false;

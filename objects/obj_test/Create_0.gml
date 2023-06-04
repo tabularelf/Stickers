@@ -1,6 +1,6 @@
-decals = new Stickers(1);
+decals = new Stickers(2, true);
 decals.Add(spr_smile, 0, 128, 128);
-decals.SetFreeze(true);
+decals.SetFreeze(false);
 //decals.Update();
 gpu_set_zwriteenable(true);
 gpu_set_ztestenable(true);

@@ -1,5 +1,6 @@
-function __StickersBuffer(_max, _texID) constructor {
+function __StickersBuffer(_max, _texID, _owner) constructor {
 	static __vFormat = __StickerVFormat();
+	__owner = _owner;
 	__texID = _texID;
 	__cacheDirty = false;
 	__buffer = buffer_create(_max, buffer_fixed, 1);
@@ -17,7 +18,7 @@ function __StickersBuffer(_max, _texID) constructor {
 		}
 	}
 	
-	static __Update = function(_freeze = true) {
+	static __Update = function() {
 		if (__cacheDirty) {
 			if (__vbuffer != -1) {
 				vertex_delete_buffer(__vbuffer);
@@ -25,7 +26,7 @@ function __StickersBuffer(_max, _texID) constructor {
 			
 			__vbuffer = vertex_create_buffer_from_buffer(__buffer, __vFormat);
 			__cacheDirty = false;
-			if (_freeze) {
+			if (__owner.__freeze) {
 				vertex_freeze(__vbuffer);	
 			}
 		}

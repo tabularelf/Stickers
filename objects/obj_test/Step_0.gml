@@ -1,9 +1,9 @@
 if (mouse_check_button(mb_left)) {
-	repeat(1 + (keyboard_check(vk_shift)*1000)) {
+	repeat(1 + (keyboard_check(vk_shift)*10)) {
 		var _scale = random_range(.3, 3);
 		var _x = mouse_x + irandom_range(-100, 100);
 		var _y = mouse_y + irandom_range(-100, 100);
-		decals.AddExt(spr_smile, irandom(image_number-1), _x, _y, _scale, _scale, random(360), make_color_hsv(irandom(255), irandom(255), irandom_range(100, 255)), random_range(.5, 1), 0);	
+		decals.AddExt(choose(spr_smile, spr_sad), irandom(image_number-1), _x, _y, _scale, _scale, random(360), make_color_hsv(irandom(255), irandom(255), irandom_range(100, 255)), random_range(.5, 1), 0);	
 	}
 }
 
