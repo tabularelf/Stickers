@@ -1,7 +1,7 @@
 /// @func Stickers(maxStickers, [distribute])
 /// @param {Real} maxStickers
 /// @param {Bool} distribute
-function Stickers(_max, _distribute = true) constructor {
+function Stickers(_max, _distribute = false) constructor {
 	static _global = __StickersGlobal();
 	if (_max <= 0) {
 		__StickersError("Max stickers cannot be less than 1!");
@@ -18,6 +18,7 @@ function Stickers(_max, _distribute = true) constructor {
 	__regionHeight = 1024;
 	__paddingWidth = 128;
 	__paddingHeight = 128;
+	__spritesLoading = [];
 	array_resize(__stickers, 0);
 	static __global = __StickersGlobal();
 	
@@ -170,7 +171,7 @@ function Stickers(_max, _distribute = true) constructor {
 			}
 			
 			if (_vb == undefined) {
-				_vb = new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, _x, _y, self);
+				_vb = new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _inst.image), _x, _y, self);
 				array_push(__vbArray, _vb);
 				if (__distribute) {
 					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE;

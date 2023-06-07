@@ -1,8 +1,10 @@
 /// @ignore
-function __StickersBufferClass(_max, _texID, _x, _y, _owner) constructor {
+function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner) constructor {
 	static __vFormat = __StickersVFormat();
 	__owner = _owner;
+	// We need to store two versions of the texture ID... All because of HTML5. This is utterly stupid. Thanks YYG! /s
 	__texID = _texID;
+	__texPtr = _texPtr;
 	__x = _x;
 	__y = _y;
 	__cacheDirty = false;
@@ -37,6 +39,7 @@ function __StickersBufferClass(_max, _texID, _x, _y, _owner) constructor {
 	
 	static __Draw = function() {
 		//draw_rectangle(__x, __y, __owner.__regionWidth, __owner.__regionHeight, true);
-		if (__vbuffer != -1) vertex_submit(__vbuffer, pr_trianglelist, __texID);	
+		if (!texture_is_ready(__texID)) texture_prefetch(__texID);
+		if (__vbuffer != -1) vertex_submit(__vbuffer, pr_trianglelist, __texPtr);	
 	}
 }
