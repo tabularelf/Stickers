@@ -39,7 +39,10 @@ function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner) constructo
 	
 	static __Draw = function() {
 		//draw_rectangle(__x, __y, __owner.__regionWidth, __owner.__regionHeight, true);
-		if (!texture_is_ready(__texID)) texture_prefetch(__texID);
+		if (!texture_is_ready(__texID)) {
+			texture_prefetch(__texID);
+			exit;
+		}
 		if (__vbuffer != -1) vertex_submit(__vbuffer, pr_trianglelist, __texPtr);	
 	}
 }
