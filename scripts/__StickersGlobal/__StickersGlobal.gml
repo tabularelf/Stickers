@@ -1,6 +1,6 @@
 #macro __STICKERS_VFORMAT_SIZE 24*6
 #macro __STICKERS_CREDITS "@TabularElf - https://tabelf.link/"
-#macro __STICKERS_VERSION "v0.0.3"
+#macro __STICKERS_VERSION "v1.0.0"
 
 /// @ignore
 function __StickersGlobal() {
@@ -9,7 +9,7 @@ function __StickersGlobal() {
 	if (_inst == undefined) {
 		_inst = {
 			spriteList: [],
-			spriteCache: {}
+			spriteCache: ds_map_create()
 		}	
 		
 		var _tags = tag_get_asset_ids("StickerDecal", asset_sprite);

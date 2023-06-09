@@ -1,4 +1,4 @@
-decals = new Stickers(1024, false).SetRegion(1024, 1024);
+decals = new Stickers(1024).SetRegion(1024, 1024);
 repeat(decals.GetMax()/10) {
 	decals.Add(spr_a, 0, irandom(decals.GetRegionWidth()), irandom(decals.GetRegionHeight()));	
 }

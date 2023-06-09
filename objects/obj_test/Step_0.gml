@@ -3,7 +3,7 @@ if (mouse_check_button(mb_left)) {
 		var _scale = random_range(.3, 3);
 		var _x = mouse_x + irandom_range(-100, 100);
 		var _y = mouse_y + irandom_range(-100, 100);
-		decals.AddExt(choose(spr_smile, spr_sad, spr_a), irandom(image_number-1), _x, _y, _scale, _scale, random(360), make_color_hsv(irandom(255), irandom(255), irandom_range(100, 255)), random_range(.2, .6), 0);	
+		decals.AddExt(spr_a, irandom(image_number-1), _x, _y, _scale, _scale, random(360), make_color_hsv(irandom(255), irandom(255), irandom_range(100, 255)), random_range(.2, .6), 0);	
 	}
 }
 
@@ -34,5 +34,3 @@ if (keyboard_check_released(ord("R"))) {
 if (keyboard_check_released(ord("Q"))) {
 	decals.SetDebug(!decals.GetDebug());	
 }
-
-decals.Update();

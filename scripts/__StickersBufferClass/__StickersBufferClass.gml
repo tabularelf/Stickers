@@ -10,6 +10,7 @@ function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner) constructo
 	__cacheDirty = false;
 	__buffer = buffer_create(_max, buffer_fixed, 1);
 	__vbuffer = -1;
+	__stickerCount = 0;
 	
 	static __Destroy = function() {
 		if (buffer_exists(__buffer)) {
@@ -31,9 +32,9 @@ function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner) constructo
 			
 			__vbuffer = vertex_create_buffer_from_buffer(__buffer, __vFormat);
 			__cacheDirty = false;
-			if (__owner.__freeze) {
-				vertex_freeze(__vbuffer);	
-			}
+			//if (__owner.__freeze) {
+			//	vertex_freeze(__vbuffer);	
+			//}
 		}
 	}
 	

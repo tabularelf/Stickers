@@ -5,7 +5,7 @@ function StickersPrecacheSprite() {
 	var _i = 0;
 	repeat(argument_count) {
 		var _spr = argument[_i];
-		__global.spriteCache[$ sprite_get_name(_spr)] = __StickersCacheSprite(_spr);
+		__global.spriteCache[? _spr] = __StickersCacheSprite(_spr);
 		++_i;
 	}
 }

@@ -10,7 +10,7 @@ function Stickers(_max, _distribute = false) constructor {
 	__maxSize = _max*__STICKERS_VFORMAT_SIZE;
 	__vbArray = [];
 	__stickers = array_create(_max); // Initial Buffer
-	__freeze = true;
+	__freeze = false;
 	__distribute = _distribute;
 	__maxDistributeSize = __maxSize;
 	__update = false;
@@ -20,6 +20,7 @@ function Stickers(_max, _distribute = false) constructor {
 	__paddingHeight = 128;
 	__spritesLoading = [];
 	__debug = false;
+	__autoUpdate = true;
 	array_resize(__stickers, 0);
 	static __global = __StickersGlobal();
 	
@@ -40,6 +41,18 @@ function Stickers(_max, _distribute = false) constructor {
 		}
 		return self;
 	}
+	
+	/// @param {Bool} autoUpdate
+	static SetAutoUpdate = function(_autoUpdate) {
+		__autoUpdate = _autoUpdate;	
+		return self;
+	}
+	
+	/// @param {Bool} autoUpdate
+	static GetAutoUpdate = function() {
+		return __autoUpdate;
+	}
+	
 	
 	/// @param {Real} width
 	/// @param {Real} height
@@ -162,13 +175,13 @@ function Stickers(_max, _distribute = false) constructor {
 		repeat(array_length(__stickers)) {
 			var _inst = __stickers[_i];
 			var _spr = _inst.sprite;
-			var _sprName = sprite_get_name(_spr);
-			if (!variable_struct_exists(__global.spriteCache, _sprName)) {
-				__global.spriteCache[$ _sprName] = __StickersCacheSprite(_spr);
+			if (!ds_map_exists(__global.spriteCache, _spr)) {
+				__global.spriteCache[? _spr] = __StickersCacheSprite(_spr);
 			}
 			
-			var _struct = __global.spriteCache[$ _sprName];
-			var _texID = _struct.texIDs[_inst.image % _struct.numFrames];
+			var _struct = __global.spriteCache[? _spr];
+			var _imgID = _inst.image % _struct.numFrames;
+			var _texID = _struct.texIDs[_imgID];
 			var _signX = sign(_inst.x);
 			var _signY = sign(_inst.y);
 			var _x = ((_inst.x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
@@ -184,7 +197,7 @@ function Stickers(_max, _distribute = false) constructor {
 			}
 			
 			if (_vb == undefined) {
-				_vb = new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _inst.image), _x, _y, self);
+				_vb = new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID), _x, _y, self);
 				array_push(__vbArray, _vb);
 				if (__distribute) {
 					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE;
@@ -196,10 +209,9 @@ function Stickers(_max, _distribute = false) constructor {
 				}
 			}
 			
-			if (buffer_tell(_vb.__buffer) >= __maxDistributeSize) {
-				buffer_seek(_vb.__buffer, buffer_seek_start, 0);	
-			}
-			__StickersSpritePrep(_vb.__buffer, _inst.sprite, _inst.image, _inst.x, _inst.y, _inst.depth, _inst.xScale, _inst.yScale, _inst.angle, _inst.colour, _inst.alpha);
+			buffer_seek(_vb.__buffer, buffer_seek_start, _vb.__stickerCount*__STICKERS_VFORMAT_SIZE % __maxSize);	
+			__StickersSpritePrep(_vb.__buffer, _struct, _imgID, _inst.x, _inst.y, _inst.depth, _inst.xScale, _inst.yScale, _inst.angle, _inst.colour, _inst.alpha);
+			++_vb.__stickerCount;
 			_vb.__cacheDirty = true;
 			array_push(_global.spriteList, __stickers[_i]);
 			++_i;
@@ -220,6 +232,7 @@ function Stickers(_max, _distribute = false) constructor {
 	/// @param {Real} width
 	/// @param {Real} height
 	static Draw = function(_x = camera_get_view_x(view_camera[view_current]), _y = camera_get_view_y(view_camera[view_current]), _width = camera_get_view_width(view_camera[view_current]), _height = camera_get_view_height(view_camera[view_current])) {
+		if (__autoUpdate) Update();
 		var _i = 0;
 		var _xCell = ((_x div __regionWidth) * __regionWidth);
 		var _yCell = ((_y div __regionHeight) * __regionHeight);
