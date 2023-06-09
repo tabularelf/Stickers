@@ -9,7 +9,6 @@ gpu_set_ztestenable(true);
 gpu_set_alphatestenable(true);
 gpu_set_alphatestref(5);
 //z = 0;
-show_debug_overlay(true);
 
 view_enabled = true;
 view_visible[0] = true;
