@@ -170,7 +170,7 @@ function Stickers(_max, _distribute = false) constructor {
 	}
 	
 	static Update = function() {
-		if (!__update) return;
+		if (!__update) || (__autoUpdate) return;
 		var _i = 0;
 		repeat(array_length(__stickers)) {
 			var _inst = __stickers[_i];
