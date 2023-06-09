@@ -38,11 +38,20 @@ function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner) constructo
 	}
 	
 	static __Draw = function() {
-		//draw_rectangle(__x, __y, __owner.__regionWidth, __owner.__regionHeight, true);
+		if (__owner.__debug) {
+			var _col = frac(sin((__x + (__y*__owner.__regionWidth)) * 0.132716) * 43758.5453)*255;
+			_col = make_color_hsv(_col, 255, 100);
+			draw_rectangle_colour(__x, __y, __x+__owner.__regionWidth, __y+__owner.__regionHeight, _col, _col, _col, _col, true);
+			draw_text(8+__x, 8+__y, "X: " + string(__x) + " Y: " + string(__y));
+		}
+		
+		// Dynamic texture pages seem to do just fine as long as you at least prefetch before submitting a vertex buffer.
+		// As it'll invoke the fallback sprite in place for a frame. Interesting nonetheless!
+		
 		if (!texture_is_ready(__texID)) {
 			texture_prefetch(__texID);
-			exit;
 		}
+		
 		if (__vbuffer != -1) vertex_submit(__vbuffer, pr_trianglelist, __texPtr);	
 	}
 }

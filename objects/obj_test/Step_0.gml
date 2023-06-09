@@ -31,4 +31,8 @@ if (keyboard_check_released(ord("R"))) {
 	StickersClearCache();	
 }
 
+if (keyboard_check_released(ord("Q"))) {
+	decals.SetDebug(!decals.GetDebug());	
+}
+
 decals.Update();

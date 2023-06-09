@@ -19,6 +19,7 @@ function Stickers(_max, _distribute = false) constructor {
 	__paddingWidth = 128;
 	__paddingHeight = 128;
 	__spritesLoading = [];
+	__debug = false;
 	array_resize(__stickers, 0);
 	static __global = __StickersGlobal();
 	
@@ -46,6 +47,15 @@ function Stickers(_max, _distribute = false) constructor {
 		__paddingWidth = __paddingWidth;
 		__paddingHeight = __paddingHeight;
 		return self;
+	}
+	
+	static SetDebug = function(_bool) {
+		__debug = _bool;
+		return self;
+	}
+	
+	static GetDebug = function() {
+		return __debug;	
 	}
 	
 	/// @param {Real} width
@@ -158,8 +168,10 @@ function Stickers(_max, _distribute = false) constructor {
 			
 			var _struct = __global.spriteCache[$ _sprName];
 			var _texID = _struct.texIDs[_inst.image % _struct.numFrames];
-			var _x = (_inst.x div __regionWidth) * __regionWidth;
-			var _y = (_inst.y div __regionHeight) * __regionHeight;
+			var _signX = sign(_inst.x);
+			var _signY = sign(_inst.y);
+			var _x = ((_inst.x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
+			var _y = ((_inst.y div __regionHeight) * __regionHeight) - (_signY != -1 ? 0 : __regionHeight);
 			var _j = 0;
 			var _vb = undefined;
 			repeat(array_length(__vbArray)) {
@@ -207,13 +219,13 @@ function Stickers(_max, _distribute = false) constructor {
 	/// @param {Real} width
 	/// @param {Real} height
 	static Draw = function(_x = camera_get_view_x(view_camera[view_current]), _y = camera_get_view_y(view_camera[view_current]), _width = camera_get_view_width(view_camera[view_current]), _height = camera_get_view_height(view_camera[view_current])) {
-		//Render nothing if Window isn't visible
-		if (window_get_width() == 0) || (window_get_height() == 0) return;
 		var _i = 0;
 		var _xCell = ((_x div __regionWidth) * __regionWidth);
 		var _yCell = ((_y div __regionHeight) * __regionHeight);
 		var _wCell = _xCell + _width + (__regionWidth div 2) /*((_width div __regionWidth) * __regionWidth)*/ + __paddingWidth;
 		var _hCell = _yCell + _height + (__regionHeight div 2) /**((_height div __regionWidth) * __regionWidth)*/ + __paddingHeight;
+		_xCell -= __regionWidth;
+		_yCell -= __regionHeight;
 		repeat(array_length(__vbArray)) {
 			var _entry = __vbArray[_i];
 			if ((_entry.__x >= _xCell) && (_entry.__x-__paddingWidth <= _wCell)) && ((_entry.__y >= _yCell) && (_entry.__y-__paddingHeight <= _hCell)) {
