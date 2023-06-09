@@ -49,6 +49,7 @@ function Stickers(_max, _distribute = false) constructor {
 		return self;
 	}
 	
+	/// @param {Bool} debug
 	static SetDebug = function(_bool) {
 		__debug = _bool;
 		return self;
