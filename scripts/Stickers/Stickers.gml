@@ -21,6 +21,7 @@ function Stickers(_max, _distribute = false) constructor {
 	__spritesLoading = [];
 	__debug = false;
 	__autoUpdate = true;
+	__destroyed = false;
 	array_resize(__stickers, 0);
 	static __global = __StickersGlobal();
 	
@@ -30,6 +31,7 @@ function Stickers(_max, _distribute = false) constructor {
 	
 	/// @param {Bool} freeze
 	static SetFreeze = function(_freeze) {
+		if (__destroyed) return;
 		if (__freeze = _freeze) return self;
 		__freeze = _freeze;	
 		var _i = 0;
@@ -44,12 +46,14 @@ function Stickers(_max, _distribute = false) constructor {
 	
 	/// @param {Bool} autoUpdate
 	static SetAutoUpdate = function(_autoUpdate) {
+		if (__destroyed) return;
 		__autoUpdate = _autoUpdate;	
 		return self;
 	}
 	
 	/// @param {Bool} autoUpdate
 	static GetAutoUpdate = function() {
+		if (__destroyed) return;
 		return __autoUpdate;
 	}
 	
@@ -57,6 +61,7 @@ function Stickers(_max, _distribute = false) constructor {
 	/// @param {Real} width
 	/// @param {Real} height
 	static SetPadding = function(_width, _height) {
+		if (__destroyed) return;
 		__paddingWidth = __paddingWidth;
 		__paddingHeight = __paddingHeight;
 		return self;
@@ -64,6 +69,7 @@ function Stickers(_max, _distribute = false) constructor {
 	
 	/// @param {Bool} debug
 	static SetDebug = function(_bool) {
+		if (__destroyed) return;
 		__debug = _bool;
 		return self;
 	}
@@ -75,6 +81,7 @@ function Stickers(_max, _distribute = false) constructor {
 	/// @param {Real} width
 	/// @param {Real} height
 	static SetRegion = function(_width, _height) {
+		if (__destroyed) return;
 		if (__regionWidth == _width) && (__regionHeight == _height) return self;
 		var _oldWidth = __regionWidth;
 		var _oldHeight = __regionHeight;
@@ -126,25 +133,13 @@ function Stickers(_max, _distribute = false) constructor {
 	/// @param {Real} image
 	/// @param {Real} x
 	/// @param {Real} y
-	/// @param {Real} depth
-	static Add = function(_spr, _img, _x, _y, _depth = 0) {
-		var _inst = __StickersGetSpriteStruct();
-		_inst.Update(_spr, _img, _x, _y, 1, 1, 0, c_white, 1, _depth);
-		array_push(__stickers, _inst);
-		__update = true;
-		return self;
-	}
-	
-	/// @param {Asset.GMSprite} sprite
-	/// @param {Real} image
-	/// @param {Real} x
-	/// @param {Real} y
 	/// @param {Real} xScale
 	/// @param {Real} yScale
 	/// @param {Constant.Colour} color
 	/// @param {Real} alpha
 	/// @param {Real} depth
-	static AddExt = function(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth = 0) {
+	static Add = function(_spr, _img, _x, _y, _xscale = 1, _yscale = 1, _ang = 0, _col = c_white, _alpha = 1, _depth = 0) {
+		if (__destroyed) return;
 		var _inst = __StickersGetSpriteStruct();
 		_inst.Update(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
 		array_push(__stickers, _inst);
@@ -169,8 +164,13 @@ function Stickers(_max, _distribute = false) constructor {
 		return self;
 	}
 	
+	static Destroy = function() {
+		Clear();
+		__destroy = true;
+	}
+	
 	static Update = function() {
-		if (!__update) return;
+		if (!__update) || (__destroyed) return;
 		var _i = 0;
 		repeat(array_length(__stickers)) {
 			var _inst = __stickers[_i];

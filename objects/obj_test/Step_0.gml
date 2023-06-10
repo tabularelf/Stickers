@@ -1,9 +1,10 @@
 if (mouse_check_button(mb_left)) {
-	repeat(1 + (keyboard_check(vk_shift)*10)) {
+	repeat(keyboard_check(vk_shift) ? 10 : 1) {
 		var _scale = random_range(.3, 3);
 		var _x = mouse_x + irandom_range(-100, 100);
 		var _y = mouse_y + irandom_range(-100, 100);
-		decals.AddExt(choose(spr_a, spr_smile, spr_sad), irandom(image_number-1), _x, _y, _scale, _scale, random(360), make_color_hsv(irandom(255), irandom(255), irandom_range(100, 255)), random_range(.2, .6), 0);	
+		var _spr = choose(spr_a, spr_sad, spr_smile);
+		decals.Add(_spr, irandom(sprite_get_number(_spr)), _x, _y, _scale, _scale, irandom(360), make_color_hsv(irandom(255), irandom(255), irandom_range(100, 255)));
 	}
 }
 
@@ -23,12 +24,8 @@ if (mouse_wheel_down()) {
 	decals.SetMax(max(decals.GetMax()-1, 1));
 }
 
-if (mouse_check_button_pressed(mb_right)) {
-	decals.Clear();
-}
-
 if (keyboard_check_released(ord("R"))) {
-	StickersClearCache();	
+	decals.Clear();
 }
 
 if (keyboard_check_released(ord("Q"))) {

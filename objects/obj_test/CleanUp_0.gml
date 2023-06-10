@@ -1,1 +1,1 @@
-decals.Clear();
+decals.Destroy();
