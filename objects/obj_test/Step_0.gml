@@ -31,3 +31,7 @@ if (keyboard_check_released(ord("R"))) {
 if (keyboard_check_released(ord("Q"))) {
 	decals.SetDebug(!decals.GetDebug());	
 }
+
+if (keyboard_check_released(ord("E"))) {
+	decals.ClearRegion(mouse_x, mouse_y);	
+}

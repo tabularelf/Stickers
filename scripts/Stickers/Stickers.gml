@@ -164,6 +164,22 @@ function Stickers(_max, _distribute = false) constructor {
 		return self;
 	}
 	
+	static ClearRegion = function(_x, _y) {
+		var _signX = sign(_x);
+		var _signY = sign(_y);
+		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
+		var _yCell = ((_y div __regionHeight) * __regionHeight) - (_signY != -1 ? 0 : __regionHeight);
+		var _i = 0;
+		repeat(array_length(__vbArray)) {
+			if (__vbArray[_i].__x == _xCell) && (__vbArray[_i].__y == _yCell) {
+				__vbArray[_i].__Destroy();
+				array_delete(__vbArray, _i, 1);
+				--_i;
+			}
+			++_i;
+		}	
+	}
+	
 	static Destroy = function() {
 		Clear();
 		__destroy = true;
