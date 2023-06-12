@@ -1,6 +1,6 @@
 #macro __STICKERS_VFORMAT_SIZE 24*6
 #macro __STICKERS_CREDITS "@TabularElf - https://tabelf.link/"
-#macro __STICKERS_VERSION "v1.0.0"
+#macro __STICKERS_VERSION "v1.1.0"
 
 /// @ignore
 /// feather ignore all
