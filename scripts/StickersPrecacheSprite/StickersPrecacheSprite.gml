@@ -1,6 +1,6 @@
 /// feather ignore all
-/// @func StickersPrecacheSprite
-/// @param {Asset.GMSprite} sprites...
+/// @func StickersPrecacheSprite(...)
+/// @param {Asset.GMSprite} sprite
 function StickersPrecacheSprite() {
 	static __global = __StickersGlobal();
 	var _i = 0;

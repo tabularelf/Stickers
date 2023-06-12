@@ -1,6 +1,6 @@
 /// feather ignore all
-/// @func StickersClearCacheSprite
-/// @param {Asset.GMSprite} sprite...
+/// @func StickersClearCacheSprite(...)
+/// @param {Asset.GMSprite} sprite
 function StickersClearCacheSprite() {
 	static __global = __StickersGlobal();
 	var _i = 0;
