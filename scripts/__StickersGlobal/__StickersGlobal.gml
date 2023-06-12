@@ -8,7 +8,6 @@ function __StickersGlobal() {
 	
 	if (_inst == undefined) {
 		_inst = {
-			spriteList: [],
 			spriteCache: ds_map_create()
 		}	
 		

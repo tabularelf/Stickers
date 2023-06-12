@@ -139,10 +139,65 @@ function Stickers(_max, _distribute = false) constructor {
 	/// @param {Real} alpha
 	/// @param {Real} depth
 	static Add = function(_spr, _img, _x, _y, _xscale = 1, _yscale = 1, _ang = 0, _col = c_white, _alpha = 1, _depth = 0) {
+		static _cacheX = 0;
+		static _cacheY = 0;
+		static _cacheTexID = -1;
+		static _cacheVbuffer = undefined;
+		
 		if (__destroyed) return;
-		var _inst = __StickersGetSpriteStruct();
-		_inst.Update(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
-		array_push(__stickers, _inst);
+		
+		if (!ds_map_exists(__global.spriteCache, _spr)) {
+			__global.spriteCache[? _spr] = new __StickersCacheSprite(_spr);
+		}
+		
+		var _struct = __global.spriteCache[? _spr];
+		var _imgID = _img % _struct.numFrames;
+		var _texID = _struct.texIDs[_imgID];
+		var _signX = sign(_x);
+		var _signY = sign(_y);
+		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
+		var _yCell = ((_y div __regionHeight) * __regionHeight) - (_signY != -1 ? 0 : __regionHeight);
+		var _j = 0;
+		var _vb = undefined;
+		
+		if (_cacheTexID == _texID) && (_cacheX == _xCell) && (_cacheY == _xCell) && (_cacheVbuffer != undefined) {
+			if (!_cacheVbuffer.__destroyed) {
+				_vb = _cacheVbuffer;	
+			}
+		}
+		
+		if (_vb == undefined) {
+			repeat(array_length(__vbArray)) {
+				if (__vbArray[_j].__texID == _texID) && (__vbArray[_j].__x == _xCell) && (__vbArray[_j].__y == _yCell) {
+					_vb = __vbArray[_j];
+					break;
+				}
+				++_j;
+			}
+			
+			if (_vb == undefined) {
+				_vb = new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID), _xCell, _yCell, self);
+				array_push(__vbArray, _vb);
+				if (__distribute) {
+					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE;
+					var _k = 0;
+					repeat(array_length(__vbArray)) {
+						buffer_resize(__vbArray[_k].__buffer, __maxDistributeSize);
+						++_k;	
+					}
+				}
+			}
+		}
+		
+		_cacheX = _xCell;
+		_cacheY = _yCell;
+		_cacheTexID = _texID;
+		_cacheVbuffer = _vb;
+		
+		buffer_seek(_vb.__buffer, buffer_seek_start, _vb.__stickerCount*__STICKERS_VFORMAT_SIZE % __maxDistributeSize);	
+		__StickersSpritePrep(_vb.__buffer, _struct, _imgID, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
+		++_vb.__stickerCount;
+		_vb.__cacheDirty = true;
 		__update = true;
 		return self;
 	}
@@ -187,55 +242,8 @@ function Stickers(_max, _distribute = false) constructor {
 	
 	static Update = function() {
 		if (!__update) || (__destroyed) return;
+		
 		var _i = 0;
-		repeat(array_length(__stickers)) {
-			var _inst = __stickers[_i];
-			var _spr = _inst.sprite;
-			if (!ds_map_exists(__global.spriteCache, _spr)) {
-				__global.spriteCache[? _spr] = __StickersCacheSprite(_spr);
-			}
-			
-			var _struct = __global.spriteCache[? _spr];
-			var _imgID = _inst.image % _struct.numFrames;
-			var _texID = _struct.texIDs[_imgID];
-			var _signX = sign(_inst.x);
-			var _signY = sign(_inst.y);
-			var _x = ((_inst.x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
-			var _y = ((_inst.y div __regionHeight) * __regionHeight) - (_signY != -1 ? 0 : __regionHeight);
-			var _j = 0;
-			var _vb = undefined;
-			repeat(array_length(__vbArray)) {
-				if (__vbArray[_j].__texID == _texID) && (__vbArray[_j].__x = _x) && (__vbArray[_j].__y = _y) {
-					_vb = __vbArray[_j];
-					break;
-				}
-				++_j;
-			}
-			
-			if (_vb == undefined) {
-				_vb = new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID), _x, _y, self);
-				array_push(__vbArray, _vb);
-				if (__distribute) {
-					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE;
-					var _k = 0;
-					repeat(array_length(__vbArray)) {
-						buffer_resize(__vbArray[_k].__buffer, __maxDistributeSize);
-						++_k;	
-					}
-				}
-			}
-			
-			buffer_seek(_vb.__buffer, buffer_seek_start, _vb.__stickerCount*__STICKERS_VFORMAT_SIZE % __maxSize);	
-			__StickersSpritePrep(_vb.__buffer, _struct, _imgID, _inst.x, _inst.y, _inst.depth, _inst.xScale, _inst.yScale, _inst.angle, _inst.colour, _inst.alpha);
-			++_vb.__stickerCount;
-			_vb.__cacheDirty = true;
-			array_push(_global.spriteList, __stickers[_i]);
-			++_i;
-		}
-		
-		array_resize(__stickers, 0);
-		
-		_i = 0;
 		repeat(array_length(__vbArray)) {
 			__vbArray[_i].__Update();
 			++_i;
