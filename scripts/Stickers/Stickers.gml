@@ -4,7 +4,7 @@
 /// @param {Real} maxStickers
 /// @param {Bool} distribute
 function Stickers(_max, _distribute = false) constructor {
-	static _global = __StickersGlobal();
+	static __global = __StickersGlobal();
 	if (_max <= 0) {
 		__StickersError("Max stickers cannot be less than 1!");
 	}
@@ -34,9 +34,7 @@ function Stickers(_max, _distribute = false) constructor {
 		__freeze = _freeze;	
 		var _i = 0;
 		repeat(array_length(__vbArray)) {
-			var _entry = __vbArray[_i];
-			_entry.__cacheDirty = true;
-			_entry.__Update();
+			__vbArray[_i].__ForceUpdate();
 			++_i;
 		}
 		return self;

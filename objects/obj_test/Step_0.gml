@@ -8,6 +8,15 @@ if (mouse_check_button(mb_left)) {
 	}
 }
 
+if (mouse_check_button(mb_right)) {
+	repeat(keyboard_check(vk_shift) ? 10 : 1) {
+		var _scale = random_range(.3, 3);
+		var _x = mouse_x + irandom_range(-100, 100);
+		var _y = mouse_y + irandom_range(-100, 100);
+		decals.Add(spr_a, 0, _x, _y, _scale, _scale, irandom(360), make_color_hsv(irandom(255), irandom(255), irandom_range(100, 255)));
+	}
+}
+
 
 var _hspd = -keyboard_check(ord("A")) + keyboard_check(ord("D"));
 var _vspd = -keyboard_check(ord("W")) + keyboard_check(ord("S"));

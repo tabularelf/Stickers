@@ -3,6 +3,7 @@
 #macro __STICKERS_VERSION "v1.0.0"
 
 /// @ignore
+/// feather ignore all
 function __StickersGlobal() {
 	static _inst = undefined;
 	

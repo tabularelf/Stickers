@@ -1,4 +1,5 @@
 /// @ignore
+/// feather ignore all
 function __StickersCacheSprite(_spr) constructor {
 	static _global = __StickersGlobal();
 	var _info = sprite_get_info(_spr);
