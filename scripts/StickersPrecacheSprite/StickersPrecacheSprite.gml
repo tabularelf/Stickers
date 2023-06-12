@@ -1,3 +1,4 @@
+/// feather ignore all
 /// @func StickersPrecacheSprite
 /// @param {Asset.GMSprite} sprites...
 function StickersPrecacheSprite() {

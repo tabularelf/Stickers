@@ -1,3 +1,5 @@
+/// feather ignore all
+
 /// @func Stickers(maxStickers, [distribute])
 /// @param {Real} maxStickers
 /// @param {Bool} distribute
@@ -9,7 +11,6 @@ function Stickers(_max, _distribute = false) constructor {
 	__maxStickers = _max;
 	__maxSize = _max*__STICKERS_VFORMAT_SIZE;
 	__vbArray = [];
-	__stickers = array_create(_max); // Initial Buffer
 	__freeze = false;
 	__distribute = _distribute;
 	__maxDistributeSize = __maxSize;
@@ -18,12 +19,9 @@ function Stickers(_max, _distribute = false) constructor {
 	__regionHeight = 1024;
 	__paddingWidth = 128;
 	__paddingHeight = 128;
-	__spritesLoading = [];
 	__debug = false;
 	__autoUpdate = true;
 	__destroyed = false;
-	array_resize(__stickers, 0);
-	static __global = __StickersGlobal();
 	
 	static GetSize = function() {
 		return array_length(__vbArray)*__maxDistributeSize;	
@@ -122,9 +120,7 @@ function Stickers(_max, _distribute = false) constructor {
 		__maxDistributeSize = __distribute ? (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE : __maxSize;
 		var _i = 0;
 		repeat(array_length(__vbArray)) {
-			buffer_resize(__vbArray[_i].__buffer, __maxDistributeSize);
-			__vbArray[_i].__cacheDirty = true;
-			__vbArray[_i].__Update();
+			__vbArray[_i].__SetMax(__maxDistributeSize);
 			++_i;	
 		}
 	}
@@ -142,7 +138,7 @@ function Stickers(_max, _distribute = false) constructor {
 		static _cacheX = 0;
 		static _cacheY = 0;
 		static _cacheTexID = -1;
-		static _cacheVbuffer = undefined;
+		static _cacheRegion = undefined;
 		
 		if (__destroyed) return;
 		
@@ -157,33 +153,57 @@ function Stickers(_max, _distribute = false) constructor {
 		var _signY = sign(_y);
 		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
 		var _yCell = ((_y div __regionHeight) * __regionHeight) - (_signY != -1 ? 0 : __regionHeight);
+		var _i =0;
 		var _j = 0;
 		var _vb = undefined;
+		var _region = undefined;
 		
-		if (_cacheTexID == _texID) && (_cacheX == _xCell) && (_cacheY == _xCell) && (_cacheVbuffer != undefined) {
-			if (!_cacheVbuffer.__destroyed) {
-				_vb = _cacheVbuffer;	
+		if (_cacheTexID == _texID) && (_cacheX == _xCell) && (_cacheY == _xCell) && (_cacheRegion != undefined) {
+			if (!_cacheRegion.__destroyed) {
+				_i = 0;
+				repeat(array_length(_cacheRegion.__entries)) {
+					if (_cacheRegion.__entries[_i].__texID == _texID) {
+						_vb = _cacheRegion.__entries[_i];	
+						_region = _cacheRegion;
+						break;
+					}
+					++_i;
+				}
 			}
 		}
 		
-		if (_vb == undefined) {
+		if (_vb == undefined) && (_region == undefined) {
+			_i = 0;
 			repeat(array_length(__vbArray)) {
-				if (__vbArray[_j].__texID == _texID) && (__vbArray[_j].__x == _xCell) && (__vbArray[_j].__y == _yCell) {
-					_vb = __vbArray[_j];
+				if (__vbArray[_i].__x == _xCell) && (__vbArray[_i].__y == _yCell) {
+					_region = __vbArray[_i];	
+					_j = 0;
+					repeat(array_length(_region.__entries)) {
+						if (_region.__entries[_j].__texID == _texID) {
+							_vb = _region.__entries[_j];	
+							break;
+						}
+						++_j;
+					}
 					break;
 				}
-				++_j;
+				++_i;
+			}
+			
+			if (_region == undefined) {
+				_region = new __StickersRegionClass(_xCell, _yCell, self);	
+				array_push(__vbArray, _region);
 			}
 			
 			if (_vb == undefined) {
-				_vb = new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID), _xCell, _yCell, self);
-				array_push(__vbArray, _vb);
+				_vb = _region.__AddEntry(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID)); //new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID), _xCell, _yCell, self);
+				//array_push(_region.__entries, _vb);
 				if (__distribute) {
 					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE;
-					var _k = 0;
+					_i = 0;
 					repeat(array_length(__vbArray)) {
-						buffer_resize(__vbArray[_k].__buffer, __maxDistributeSize);
-						++_k;	
+						__vbArray[_i].__SetMax(__maxDistributeSize);
+						++_i;	
 					}
 				}
 			}
@@ -192,7 +212,7 @@ function Stickers(_max, _distribute = false) constructor {
 		_cacheX = _xCell;
 		_cacheY = _yCell;
 		_cacheTexID = _texID;
-		_cacheVbuffer = _vb;
+		_cacheRegion = _region;
 		
 		buffer_seek(_vb.__buffer, buffer_seek_start, _vb.__stickerCount*__STICKERS_VFORMAT_SIZE % __maxDistributeSize);	
 		__StickersSpritePrep(_vb.__buffer, _struct, _imgID, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
@@ -204,21 +224,17 @@ function Stickers(_max, _distribute = false) constructor {
 	
 	static Clear = function() {
 		var _i = 0;
+		var _j = 0;
 		repeat(array_length(__vbArray)) {
 			__vbArray[_i].__Destroy();
 			++_i;
 		}
 		array_resize(__vbArray, 0);
-		
-		_i = 0;
-		repeat(array_length(__stickers)) {
-			array_push(_global.spriteList, __stickers[_i]);
-			++_i;
-		}
-		array_resize(__stickers, 0);
 		return self;
 	}
 	
+	// @param {Real} x
+	// @param {Real} y
 	static ClearRegion = function(_x, _y) {
 		var _signX = sign(_x);
 		var _signY = sign(_y);
@@ -229,10 +245,11 @@ function Stickers(_max, _distribute = false) constructor {
 			if (__vbArray[_i].__x == _xCell) && (__vbArray[_i].__y == _yCell) {
 				__vbArray[_i].__Destroy();
 				array_delete(__vbArray, _i, 1);
-				--_i;
+				break;
 			}
 			++_i;
-		}	
+		}
+		return self;
 	}
 	
 	static Destroy = function() {
@@ -244,8 +261,13 @@ function Stickers(_max, _distribute = false) constructor {
 		if (!__update) || (__destroyed) return;
 		
 		var _i = 0;
+		var _j = 0;
 		repeat(array_length(__vbArray)) {
-			__vbArray[_i].__Update();
+			_j = 0;
+			repeat(array_length(__vbArray[_i].__entries)) {
+				__vbArray[_i].__entries[_j].__Update();	
+				++_j;
+			}
 			++_i;
 		}
 		__update = false;
@@ -260,8 +282,8 @@ function Stickers(_max, _distribute = false) constructor {
 		var _i = 0;
 		var _xCell = ((_x div __regionWidth) * __regionWidth);
 		var _yCell = ((_y div __regionHeight) * __regionHeight);
-		var _wCell = _xCell + _width + (__regionWidth div 2) /*((_width div __regionWidth) * __regionWidth)*/ + __paddingWidth;
-		var _hCell = _yCell + _height + (__regionHeight div 2) /**((_height div __regionWidth) * __regionWidth)*/ + __paddingHeight;
+		var _wCell = _xCell + _width + (__regionWidth div 2)  + __paddingWidth;
+		var _hCell = _yCell + _height + (__regionHeight div 2)  + __paddingHeight;
 		_xCell -= __regionWidth;
 		_yCell -= __regionHeight;
 		repeat(array_length(__vbArray)) {

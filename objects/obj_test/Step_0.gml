@@ -3,7 +3,7 @@ if (mouse_check_button(mb_left)) {
 		var _scale = random_range(.3, 3);
 		var _x = mouse_x + irandom_range(-100, 100);
 		var _y = mouse_y + irandom_range(-100, 100);
-		var _spr = spr_a;
+		var _spr = choose(spr_a, spr_smile, spr_sad);
 		decals.Add(_spr, irandom(sprite_get_number(_spr)), _x, _y, _scale, _scale, irandom(360), make_color_hsv(irandom(255), irandom(255), irandom_range(100, 255)));
 	}
 }

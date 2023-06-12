@@ -1,3 +1,5 @@
+/// feather ignore all
+
 /// @func StickersClearCache
 function StickersClearCache() {
 	static __global = __StickersGlobal();
