@@ -5,11 +5,10 @@ function __StickersSpritePrep(_buffer, _struct, _index, _x, _y, _z, _xScale, _yS
 	var _rgba = (_colour & 0xFFFFFF) | ((0xFF*_alpha) << 24);
 	
 	// Get UV info
-	var _left, _right, _top, _bottom;
-	_left =			_uvs[0]; 
-	_top =			_uvs[1];
-	_right =		_uvs[2];
-	_bottom =	_uvs[3]; 
+	var _left =	_uvs[0]; 
+	var _top = _uvs[1];
+	var _right = _uvs[2];
+	var _bottom = _uvs[3]; 
 	
 	var _sin = dsin(_angle+90);
     var _cos = dcos(_angle+90);

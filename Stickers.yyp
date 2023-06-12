@@ -10,7 +10,7 @@
     {"id":{"name":"spr_a","path":"sprites/spr_a/spr_a.yy",},"order":1,},
     {"id":{"name":"__StickersRegionClass","path":"scripts/__StickersRegionClass/__StickersRegionClass.yy",},"order":10,},
     {"id":{"name":"__StickersGlobal","path":"scripts/__StickersGlobal/__StickersGlobal.yy",},"order":5,},
-    {"id":{"name":"__StickersCacheSprite","path":"scripts/__StickersCacheSprite/__StickersCacheSprite.yy",},"order":9,},
+    {"id":{"name":"__StickersCacheSpriteClass","path":"scripts/__StickersCacheSpriteClass/__StickersCacheSpriteClass.yy",},"order":9,},
     {"id":{"name":"obj_test","path":"objects/obj_test/obj_test.yy",},"order":1,},
     {"id":{"name":"StickersPrecacheSprite","path":"scripts/StickersPrecacheSprite/StickersPrecacheSprite.yy",},"order":9,},
     {"id":{"name":"Stickers","path":"scripts/Stickers/Stickers.yy",},"order":0,},

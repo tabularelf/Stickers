@@ -141,7 +141,7 @@ function Stickers(_max, _distribute = false) constructor {
 		if (__destroyed) return;
 		
 		if (!ds_map_exists(__global.spriteCache, _spr)) {
-			__global.spriteCache[? _spr] = new __StickersCacheSprite(_spr);
+			StickersPrecacheSprite(_spr);
 		}
 		
 		var _struct = __global.spriteCache[? _spr];
