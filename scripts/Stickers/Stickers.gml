@@ -10,7 +10,7 @@ function Stickers(_max, _distribute = false) constructor {
 	}
 	__maxStickers = _max;
 	__maxSize = _max*__STICKERS_VFORMAT_SIZE;
-	__vbArray = [];
+	__regions = [];
 	__freeze = false;
 	__distribute = _distribute;
 	__maxDistributeSize = __maxSize;
@@ -24,7 +24,7 @@ function Stickers(_max, _distribute = false) constructor {
 	__destroyed = false;
 	
 	static GetSize = function() {
-		return array_length(__vbArray)*__maxDistributeSize;	
+		return array_length(__regions)*__maxDistributeSize;	
 	}
 	
 	/// @param {Bool} freeze
@@ -33,8 +33,8 @@ function Stickers(_max, _distribute = false) constructor {
 		if (__freeze = _freeze) return self;
 		__freeze = _freeze;	
 		var _i = 0;
-		repeat(array_length(__vbArray)) {
-			__vbArray[_i].__ForceUpdate();
+		repeat(array_length(__regions)) {
+			__regions[_i].__ForceUpdate();
 			++_i;
 		}
 		return self;
@@ -84,8 +84,8 @@ function Stickers(_max, _distribute = false) constructor {
 		__regionWidth = _width;
 		__regionHeight = _height;
 		var _i = 0;
-		repeat(array_length(__vbArray)) {
-			var _entry = __vbArray[_i];
+		repeat(array_length(__regions)) {
+			var _entry = __regions[_i];
 			var _x = (_entry.__x div _width) * _width;
 			var _y = (_entry.__y div _height) * _height;
 			_entry.__x = _x;
@@ -115,10 +115,10 @@ function Stickers(_max, _distribute = false) constructor {
 		}
 		__maxStickers = _max;	
 		__maxSize = __maxStickers*__STICKERS_VFORMAT_SIZE;
-		__maxDistributeSize = __distribute ? (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE : __maxSize;
+		__maxDistributeSize = __distribute ? (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_SIZE : __maxSize;
 		var _i = 0;
-		repeat(array_length(__vbArray)) {
-			__vbArray[_i].__SetMax(__maxDistributeSize);
+		repeat(array_length(__regions)) {
+			__regions[_i].__SetMax(__maxDistributeSize);
 			++_i;	
 		}
 	}
@@ -172,9 +172,9 @@ function Stickers(_max, _distribute = false) constructor {
 		
 		if (_vb == undefined) && (_region == undefined) {
 			_i = 0;
-			repeat(array_length(__vbArray)) {
-				if (__vbArray[_i].__x == _xCell) && (__vbArray[_i].__y == _yCell) {
-					_region = __vbArray[_i];	
+			repeat(array_length(__regions)) {
+				if (__regions[_i].__x == _xCell) && (__regions[_i].__y == _yCell) {
+					_region = __regions[_i];	
 					_j = 0;
 					repeat(array_length(_region.__entries)) {
 						if (_region.__entries[_j].__texID == _texID) {
@@ -190,17 +190,17 @@ function Stickers(_max, _distribute = false) constructor {
 			
 			if (_region == undefined) {
 				_region = new __StickersRegionClass(_xCell, _yCell, self);	
-				array_push(__vbArray, _region);
+				array_push(__regions, _region);
 			}
 			
 			if (_vb == undefined) {
 				_vb = _region.__AddEntry(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID)); //new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID), _xCell, _yCell, self);
 				//array_push(_region.__entries, _vb);
 				if (__distribute) {
-					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__vbArray)), 1))*__STICKERS_VFORMAT_SIZE;
+					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_SIZE;
 					_i = 0;
-					repeat(array_length(__vbArray)) {
-						__vbArray[_i].__SetMax(__maxDistributeSize);
+					repeat(array_length(__regions)) {
+						__regions[_i].__SetMax(__maxDistributeSize);
 						++_i;	
 					}
 				}
@@ -223,11 +223,11 @@ function Stickers(_max, _distribute = false) constructor {
 	static Clear = function() {
 		var _i = 0;
 		var _j = 0;
-		repeat(array_length(__vbArray)) {
-			__vbArray[_i].__Destroy();
+		repeat(array_length(__regions)) {
+			__regions[_i].__Destroy();
 			++_i;
 		}
-		array_resize(__vbArray, 0);
+		array_resize(__regions, 0);
 		return self;
 	}
 	
@@ -239,10 +239,10 @@ function Stickers(_max, _distribute = false) constructor {
 		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
 		var _yCell = ((_y div __regionHeight) * __regionHeight) - (_signY != -1 ? 0 : __regionHeight);
 		var _i = 0;
-		repeat(array_length(__vbArray)) {
-			if (__vbArray[_i].__x == _xCell) && (__vbArray[_i].__y == _yCell) {
-				__vbArray[_i].__Destroy();
-				array_delete(__vbArray, _i, 1);
+		repeat(array_length(__regions)) {
+			if (__regions[_i].__x == _xCell) && (__regions[_i].__y == _yCell) {
+				__regions[_i].__Destroy();
+				array_delete(__regions, _i, 1);
 				break;
 			}
 			++_i;
@@ -260,10 +260,10 @@ function Stickers(_max, _distribute = false) constructor {
 		
 		var _i = 0;
 		var _j = 0;
-		repeat(array_length(__vbArray)) {
+		repeat(array_length(__regions)) {
 			_j = 0;
-			repeat(array_length(__vbArray[_i].__entries)) {
-				__vbArray[_i].__entries[_j].__Update();	
+			repeat(array_length(__regions[_i].__entries)) {
+				__regions[_i].__entries[_j].__Update();	
 				++_j;
 			}
 			++_i;
@@ -284,8 +284,8 @@ function Stickers(_max, _distribute = false) constructor {
 		var _hCell = _yCell + _height + (__regionHeight div 2)  + __paddingHeight;
 		_xCell -= __regionWidth;
 		_yCell -= __regionHeight;
-		repeat(array_length(__vbArray)) {
-			var _entry = __vbArray[_i];
+		repeat(array_length(__regions)) {
+			var _entry = __regions[_i];
 			if ((_entry.__x >= _xCell) && (_entry.__x-__paddingWidth <= _wCell)) && ((_entry.__y >= _yCell) && (_entry.__y-__paddingHeight <= _hCell)) {
 				_entry.__Draw();
 			}
