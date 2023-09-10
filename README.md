@@ -7,5 +7,3 @@
 
 - ### [Download the .yymps](https://github.com/tabularelf/Stickers/releases/)
 - ### Talk about Stickers on [GameMaker Kitchen Discord Server](https://discord.gg/8krYCqr)
-
-if (!__update) || (__autoUpdate) return; 
