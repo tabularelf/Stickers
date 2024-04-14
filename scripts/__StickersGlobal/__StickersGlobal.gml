@@ -9,11 +9,18 @@ function __StickersGlobal() {
 	
 	if (_inst == undefined) {
 		_inst = {
-			spriteCache: ds_map_create()
+			spriteCache: ds_map_create(),
+			newVertexFunctions: true
 		}	
 		
 		var _tags = tag_get_asset_ids("StickerDecal", asset_sprite);
 		script_execute_ext(StickersPrecacheSprite, _tags);
+		
+		try {
+			vertex_format_get_info(__StickersVFormat());	
+		} catch(_) {
+			_inst.newVertexFunctions = false;	
+		}
 	}
 	
 	return _inst;

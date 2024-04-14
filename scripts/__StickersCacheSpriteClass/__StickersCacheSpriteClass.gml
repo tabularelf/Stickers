@@ -6,6 +6,7 @@ function __StickersCacheSpriteClass(_spr) constructor {
 	numFrames = _info.num_subimages;
 	texIDs = array_create(_info.num_subimages);
 	uvs = array_create(_info.num_subimages);
+	uvsLength = _info.num_subimages;
 	xoffset = -sprite_get_xoffset(_spr);
 	yoffset = -sprite_get_yoffset(_spr);
 	width = sprite_get_width(_spr);

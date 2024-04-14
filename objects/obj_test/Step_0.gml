@@ -8,6 +8,13 @@ if (mouse_check_button(mb_left)) {
 	}
 }
 
+data = decals.GetImageData(mouse_x, mouse_y, 128, 128, 128, 128, true);
+if (keyboard_check(vk_control)) {
+	if (array_length(data) != 0) {
+		data[0].Update(,,mouse_x, mouse_y, 1, 1, current_time / 10)
+	}
+}
+
 if (mouse_check_button(mb_right)) {
 	repeat(keyboard_check(vk_shift) ? 10 : 1) {
 		var _scale = random_range(.3, 3);

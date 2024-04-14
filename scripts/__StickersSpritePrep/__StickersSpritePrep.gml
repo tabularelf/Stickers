@@ -1,7 +1,7 @@
 /// @ignore
 /// feather ignore all
 function __StickersSpritePrep(_buffer, _struct, _index, _x, _y, _z, _xScale, _yScale, _angle, _colour, _alpha) {
-	var _uvs = _struct.uvs[_index];
+	var _uvs = _struct.uvs[_index % _struct.uvsLength];
 	var _rgba = (_colour & 0xFFFFFF) | ((0xFF*_alpha) << 24);
 	
 	// Get UV info

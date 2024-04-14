@@ -13,6 +13,7 @@
     {"id":{"name":"__StickersCacheSpriteClass","path":"scripts/__StickersCacheSpriteClass/__StickersCacheSpriteClass.yy",},"order":9,},
     {"id":{"name":"obj_test","path":"objects/obj_test/obj_test.yy",},"order":1,},
     {"id":{"name":"StickersPrecacheSprite","path":"scripts/StickersPrecacheSprite/StickersPrecacheSprite.yy",},"order":9,},
+    {"id":{"name":"__StickersImageDataClass","path":"scripts/__StickersImageDataClass/__StickersImageDataClass.yy",},"order":11,},
     {"id":{"name":"Stickers","path":"scripts/Stickers/Stickers.yy",},"order":0,},
     {"id":{"name":"spr_smile","path":"sprites/spr_smile/spr_smile.yy",},"order":1,},
     {"id":{"name":"spr_sad","path":"sprites/spr_sad/spr_sad.yy",},"order":0,},
@@ -60,6 +61,6 @@
   ],
   "IncludedFiles": [],
   "MetaData": {
-    "IDEVersion": "2022.0.1.31",
+    "IDEVersion": "2022.0.2.51",
   },
 }
