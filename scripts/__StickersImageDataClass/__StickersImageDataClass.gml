@@ -52,15 +52,23 @@ function __StickersImageDataClass(_owner, _pos, _arrayPos, _spr, _img, _x, _y, _
 	
 	static Remove = function() {
 		// Current method is undesirable, as it leaves gaps in the vertex buffer
-		//
+		// But this should be desirable enough that it won't be as problematic... Hopefully!
 		// TODO: Replace with much better method
 		
 		__owner.__owner.__update = true;
 		__owner.__imageData[__arrayPos] = undefined;
 		// CLEAR
 		var _i = 0;
+		
+		// We're fetching xyz here to reset on every spot
+		var _x = buffer_peek(__owner.__buffer, __pos, buffer_f32);
+		var _y = buffer_peek(__owner.__buffer, __pos+4, buffer_f32);
+		var _z = buffer_peek(__owner.__buffer, __pos+8, buffer_f32);
 		repeat(6) {
-			buffer_fill(__owner.__buffer, __pos+12+(24*_i), buffer_u8, 0, 4);
+			buffer_poke(__owner.__buffer, __pos+(__STICKERS_VFORMAT_SIZE*_i), buffer_f32, _x);
+			buffer_poke(__owner.__buffer, __pos+4+(__STICKERS_VFORMAT_SIZE*_i), buffer_f32, _y);
+			buffer_poke(__owner.__buffer, __pos+8+(__STICKERS_VFORMAT_SIZE*_i), buffer_f32, _z);
+			buffer_fill(__owner.__buffer, __pos+12+(__STICKERS_VFORMAT_SIZE*_i), buffer_u8, 0, 4);
 			_i++;
 		}
 		

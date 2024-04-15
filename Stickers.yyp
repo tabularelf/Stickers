@@ -18,6 +18,7 @@
     {"id":{"name":"spr_smile","path":"sprites/spr_smile/spr_smile.yy",},"order":1,},
     {"id":{"name":"spr_sad","path":"sprites/spr_sad/spr_sad.yy",},"order":0,},
     {"id":{"name":"StickersClearCacheSprite","path":"scripts/StickersClearCacheSprite/StickersClearCacheSprite.yy",},"order":13,},
+    {"id":{"name":"__StickersConfig","path":"scripts/__StickersConfig/__StickersConfig.yy",},"order":14,},
     {"id":{"name":"__StickersError","path":"scripts/__StickersError/__StickersError.yy",},"order":3,},
     {"id":{"name":"rm_test","path":"rooms/rm_test/rm_test.yy",},"order":2,},
   ],

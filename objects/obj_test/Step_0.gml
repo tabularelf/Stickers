@@ -8,7 +8,7 @@ if (mouse_check_button(mb_left)) {
 	}
 }
 
-data = decals.GetImageData(mouse_x, mouse_y);
+data = decals.GetImageData(mouse_x, mouse_y, -256, -256, 256, 256);
 
 var _i = 0;
 repeat(array_length(data)) {

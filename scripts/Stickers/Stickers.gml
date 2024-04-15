@@ -1,5 +1,4 @@
 /// feather ignore all
-#macro StickersStoreImageData true
 
 /// @func Stickers(maxStickers, [distribute])
 /// @param {Real} maxStickers
@@ -10,7 +9,7 @@ function Stickers(_max, _distribute = false) constructor {
 		__StickersError("Max stickers cannot be less than 1!");
 	}
 	__maxStickers = _max;
-	__maxSize = _max*__STICKERS_VFORMAT_SIZE;
+	__maxSize = _max*__STICKERS_VFORMAT_VERTICES_SIZE;
 	__regions = [];
 	__freeze = false;
 	__distribute = _distribute;
@@ -115,8 +114,8 @@ function Stickers(_max, _distribute = false) constructor {
 			__StickersError("Max stickers cannot be less than 1!");
 		}
 		__maxStickers = _max;	
-		__maxSize = __maxStickers*__STICKERS_VFORMAT_SIZE;
-		__maxDistributeSize = __distribute ? (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_SIZE : __maxSize;
+		__maxSize = __maxStickers*__STICKERS_VFORMAT_VERTICES_SIZE;
+		__maxDistributeSize = __distribute ? (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_VERTICES_SIZE : __maxSize;
 		var _i = 0;
 		repeat(array_length(__regions)) {
 			__regions[_i].__SetMax(__maxDistributeSize);
@@ -198,7 +197,7 @@ function Stickers(_max, _distribute = false) constructor {
 				_vb = _region.__AddEntry(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID));
 				//array_push(_region.__entries, _vb);
 				if (__distribute) {
-					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_SIZE;
+					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_VERTICES_SIZE;
 					_i = 0;
 					repeat(array_length(__regions)) {
 						__regions[_i].__SetMax(__maxDistributeSize);
@@ -213,20 +212,20 @@ function Stickers(_max, _distribute = false) constructor {
 		_cacheTexID = _texID;
 		_cacheRegion = _region;
 		
-		var _bufferPos = _vb.__stickerCount*__STICKERS_VFORMAT_SIZE % __maxDistributeSize;
+		var _bufferPos = _vb.__stickerCount*__STICKERS_VFORMAT_VERTICES_SIZE % __maxDistributeSize;
 		buffer_seek(_vb.__buffer, buffer_seek_start, _bufferPos);	
 		 
-		if (StickersStoreImageData) {
+		if (__STICKERS_STORE_IMAGE_DATA) {
 			var _undefinedImageData = _vb.__imageData[_vb.__imageDataPos] == undefined;
 			_vb.__imageData[_vb.__imageDataPos] ??= new __StickersImageDataClass(_vb, _bufferPos, _vb.__imageDataPos, _spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
 			_vb.__imageData[_vb.__imageDataPos].__UpdateSprite(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
 			_vb.__imageDataPos = (_vb.__imageDataPos + 1) % __maxStickers;
-			if (_undefinedImageData) && (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_SIZE) {
+			if (_undefinedImageData) && (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_VERTICES_SIZE) {
 				_vb.__stickerCount++;
 			}
 		}
 		__StickersSpritePrep(_vb.__buffer, _struct, _imgID, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
-		if (!StickersStoreImageData) {
+		if (!__STICKERS_STORE_IMAGE_DATA) {
 			__stickerCount = 1;	
 		}
 		_vb.__cacheDirty = true;
@@ -235,7 +234,7 @@ function Stickers(_max, _distribute = false) constructor {
 	}
 	
 	static GetImageData = function(_x, _y, _leftPad = -128, _topPad = -128, _rightPad = 128, _bottomPad = 128, _sortByDepth = false) {
-		if (!StickersStoreImageData) return undefined;
+		if (!__STICKERS_STORE_IMAGE_DATA) return __StickersError("Image data unavailable! Please set \"__STICKERS_STORE_IMAGE_DATA\" to true in __StickersConfig!");
 		//show_debug_message([_x, _y]);	
 		var _signX = sign(_x);
 		var _signY = sign(_y);

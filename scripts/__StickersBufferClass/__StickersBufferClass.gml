@@ -12,7 +12,7 @@ function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner, _regionOwn
 	__vbuffer = -1;
 	__stickerCount = 0;
 	__maxSize = _max;
-	__imageData = (StickersStoreImageData) ? array_create(_owner.__maxStickers, undefined) : undefined;
+	__imageData = (__STICKERS_STORE_IMAGE_DATA) ? array_create(_owner.__maxStickers, undefined) : undefined;
 	__imageDataPos = 0;
 	__regionOwner = _regionOwner;
 	
@@ -27,7 +27,7 @@ function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner, _regionOwn
 			__vbuffer = -1;
 		}
 		
-		if (StickersStoreImageData) array_resize(__imageData, 0);
+		if (__STICKERS_STORE_IMAGE_DATA) array_resize(__imageData, 0);
 	}
 	
 	static __Update = function() {
