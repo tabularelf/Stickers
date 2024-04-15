@@ -217,20 +217,26 @@ function Stickers(_max, _distribute = false) constructor {
 		buffer_seek(_vb.__buffer, buffer_seek_start, _bufferPos);	
 		 
 		if (StickersStoreImageData) {
-			_vb.__imageData[_vb.__imageDataPos] ??= new __StickersImageDataClass(_vb, _bufferPos, _spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
+			var _undefinedImageData = _vb.__imageData[_vb.__imageDataPos] == undefined;
+			_vb.__imageData[_vb.__imageDataPos] ??= new __StickersImageDataClass(_vb, _bufferPos, _vb.__imageDataPos, _spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
 			_vb.__imageData[_vb.__imageDataPos].__UpdateSprite(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
 			_vb.__imageDataPos = (_vb.__imageDataPos + 1) % __maxStickers;
+			if (_undefinedImageData) && (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_SIZE) {
+				_vb.__stickerCount++;
+			}
 		}
 		__StickersSpritePrep(_vb.__buffer, _struct, _imgID, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
-		++_vb.__stickerCount;
+		if (!StickersStoreImageData) {
+			__stickerCount = 1;	
+		}
 		_vb.__cacheDirty = true;
 		__update = true;
 		return self;
 	}
 	
-	static GetImageData = function(_x, _y, _leftPad = 128, _topPad = 128, _rightPad = 128, _bottomPad = 128, _sortByDepth = false) {
+	static GetImageData = function(_x, _y, _leftPad = -128, _topPad = -128, _rightPad = 128, _bottomPad = 128, _sortByDepth = false) {
 		if (!StickersStoreImageData) return undefined;
-		
+		//show_debug_message([_x, _y]);	
 		var _signX = sign(_x);
 		var _signY = sign(_y);
 		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
@@ -247,11 +253,11 @@ function Stickers(_max, _distribute = false) constructor {
 					var _k = 0;
 					var _vb = _region.__entries[_j];
 					repeat(array_length(_vb.__imageData)) {
-						if (_vb.__imageData[_k] == undefined) break;
-						
-						var _imageData = _vb.__imageData[_k];
-						if (point_in_rectangle(_x, _y, _imageData.x-_leftPad, _imageData.y-_topPad, _imageData.x+_rightPad, _imageData.y + _bottomPad)) {
-							array_push(_results, _imageData);	
+						if (_vb.__imageData[_k] != undefined) {
+							var _imageData = _vb.__imageData[_k];
+							if (point_in_rectangle(_x, _y, _imageData.__x+_leftPad, _imageData.__y+_topPad, _imageData.__x+_rightPad, _imageData.__y+_bottomPad)) {
+								array_push(_results, _imageData);	
+							} 
 						}
 						++_k;
 					}	

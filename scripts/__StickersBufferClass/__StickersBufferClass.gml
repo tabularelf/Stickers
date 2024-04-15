@@ -1,6 +1,6 @@
 /// @ignore
 /// feather ignore all
-function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner) constructor {
+function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner, _regionOwner) constructor {
 	static __global = __StickersGlobal();
 	static __vFormat = __StickersVFormat();
 	__owner = _owner;
@@ -11,8 +11,10 @@ function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner) constructo
 	__buffer = buffer_create(_max, buffer_fixed, 1);
 	__vbuffer = -1;
 	__stickerCount = 0;
+	__maxSize = _max;
 	__imageData = (StickersStoreImageData) ? array_create(_owner.__maxStickers, undefined) : undefined;
 	__imageDataPos = 0;
+	__regionOwner = _regionOwner;
 	
 	static __Destroy = function() {
 		if (buffer_exists(__buffer)) {
@@ -57,6 +59,7 @@ function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner) constructo
 	}
 	
 	static __Draw = function() {
+		if (__stickerCount <= 0) return;
 		// Dynamic texture pages seem to do just fine as long as you at least prefetch before submitting a vertex buffer.
 		// As it'll invoke the fallback sprite in place for a frame. Interesting nonetheless!
 		

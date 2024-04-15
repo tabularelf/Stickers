@@ -1,50 +1,82 @@
 /// @feather ignore all
 
 /// @ignore
-function __StickersImageDataClass(_owner, _pos, _spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth) constructor {
+function __StickersImageDataClass(_owner, _pos, _arrayPos, _spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth) constructor {
 	static __spriteCache = __StickersGlobal().spriteCache;
 	__struct = __spriteCache[? _spr];
-	sprite_index = _spr;
-	image_index = _img;
-	x = _x;
-	y = _y;
-	xscale = _xscale;
-	yscale = _yscale;
-	angle = _ang;
-	color = _col;
-	alpha = _alpha;
-	depth = _depth;
+	__sprite_index = _spr;
+	__image_index = _img;
+	__x = _x;
+	__y = _y;
+	__xscale = _xscale;
+	__yscale = _yscale;
+	__angle = _ang;
+	__color = _col;
+	__alpha = _alpha;
+	__depth = _depth;
 	__owner = _owner;
 	__pos = _pos;
+	__destroyed = false;
+	__arrayPos = _arrayPos;
 	
 	static __UpdateSprite = function(_sprite, _img, _x, _y, _xscale, _yscale,  _ang, _col, _alpha, _depth) {
-		//if (sprite_index != _sprite) {
+		if (__destroyed) return;
+		if (__sprite_index != _sprite) {
 			StickersPrecacheSprite(_sprite);
 			__struct = __spriteCache[? _sprite];
-		//}
-		sprite_index = _sprite;
-		image_index = _img;
-		x = _x;
-		y = _y;
-		xscale = _xscale;
-		yscale = _yscale;
-		angle = _ang;
-		color = _col;
-		alpha = _alpha;
-		depth = _depth;
+		}
+		__sprite_index = _sprite;
+		__image_index = _img;
+		__x = _x;
+		__y = _y;
+		__xscale = _xscale;
+		__yscale = _yscale;
+		__angle = _ang;
+		__color = _col;
+		__alpha = _alpha;
+		__depth = _depth;
 	}
 	
-	static Update = function(_sprite = sprite_index, _img = image_index, _x = x, _y = y, _xscale = xscale, _yscale = yscale,  _ang = angle, _col = color, _alpha = alpha, _depth = depth) {
+	static Update = function(_sprite = __sprite_index, _img = __image_index, _x = __x, _y = __y, _xscale = __xscale, _yscale = __yscale,  _ang = __angle, _col = __color, _alpha = __alpha, _depth = __depth) {
+		if (__destroyed) return;
 		__UpdateSprite(_sprite, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
 		var _seek = buffer_tell(__owner.__buffer);
 		buffer_seek(__owner.__buffer, buffer_seek_start, __pos);
 		__StickersSpritePrep(__owner.__buffer, __struct, _img, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
 		buffer_seek(__owner.__buffer, buffer_seek_start, _seek);
+		
+		// Lol
 		__owner.__owner.__update = true;
 		__owner.__cacheDirty = true;
 	}
 	
+	static Remove = function() {
+		// Current method is undesirable, as it leaves gaps in the vertex buffer
+		//
+		// TODO: Replace with much better method
+		
+		__owner.__owner.__update = true;
+		__owner.__imageData[__arrayPos] = undefined;
+		// CLEAR
+		var _i = 0;
+		repeat(6) {
+			buffer_fill(__owner.__buffer, __pos+12+(24*_i), buffer_u8, 0, 4);
+			_i++;
+		}
+		
+		
+		__owner.__stickerCount--;
+		
+		__owner.__cacheDirty = true;
+		__destroyed = true;
+		
+		//if (_forceRefresh) {
+		//	__owner.__regionOwner.__forceRefresh = true;	
+		//}
+	}
+	
 	static DebugDraw = function() {
-		draw_sprite_ext(sprite_index, image_index, x, y, xscale, yscale, angle, color, alpha);	
+		if (__destroyed) return;
+		draw_sprite_ext(__sprite_index, __image_index, __x, __y, __xscale, __yscale, __angle, __color, __alpha);	
 	}
 }

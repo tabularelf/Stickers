@@ -8,10 +8,21 @@ if (mouse_check_button(mb_left)) {
 	}
 }
 
-data = decals.GetImageData(mouse_x, mouse_y, 128, 128, 128, 128, true);
+data = decals.GetImageData(mouse_x, mouse_y);
+
+var _i = 0;
+repeat(array_length(data)) {
+	data[_i].Update(,,,,sin(current_time/1000)*4,sin(current_time/1000)*4,current_time / 10);	
+	++_i;
+}
+
 if (keyboard_check(vk_control)) {
-	if (array_length(data) != 0) {
-		data[0].Update(,,mouse_x, mouse_y, 1, 1, current_time / 10)
+	var _i = 0;
+	//show_debug_message(array_length(data));
+	repeat(array_length(data)) {
+		//data[_i].Update(,,irandom(room_width),irandom(room_height),,,current_time / 10);	
+		data[_i].Remove();
+		_i++
 	}
 }
 
