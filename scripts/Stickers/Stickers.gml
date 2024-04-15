@@ -269,7 +269,7 @@ function Stickers(_max, _distribute = false) constructor {
 		
 		if (_sortByDepth) {
 			array_sort(_results, function(_elmA, _elmB) {
-				return _elmA.depth - _elmB.depth;
+				return _elmA.__depth - _elmB.__depth;
 			});
 		}
 		
