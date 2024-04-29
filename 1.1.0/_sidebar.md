@@ -2,7 +2,7 @@
 - [Getting started](gettingstarted.md)
 ---
 **API Reference**
-- [Stickers()](canvas.md)
-- [Stickers().Get*](canvas-get.md)
-- [Stickers().Set*](canvas-set.md)
+- [Stickers()](stickers.md)
+- [Stickers().Get*](stickers-get.md)
+- [Stickers().Set*](stickers-set.md)
 - [General](general.md)
