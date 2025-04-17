@@ -1,26 +1,24 @@
 /// @ignore
 /// feather ignore all
 function __StickersSpritePrep(_buffer, _struct, _index, _x, _y, _z, _xScale, _yScale, _angle, _colour, _alpha) {
-	var _uvs = _struct.uvs[_index % _struct.uvsLength];
+	var _uvs = _struct.uvs[_index];
 	var _rgba = (_colour & 0xFFFFFF) | ((0xFF*_alpha) << 24);
 	
 	// Get UV info
-	var _left =	_uvs[0]; 
-	var _top = _uvs[1];
-	var _right = _uvs[2];
-	var _bottom = _uvs[3]; 
+	var _left =	_uvs.left; 
+	var _top = _uvs.top;
+	var _right = _uvs.right;
+	var _bottom = _uvs.bottom; 
 	
 	var _sin = dsin(_angle+90);
     var _cos = dcos(_angle+90);
 	
-	var _xPos = _struct.xoffset;
-	var _yPos = _struct.yoffset;
-	var _widthScale = _xScale*_uvs[6];
-	var _heightScale = _yScale*_uvs[7];
-	var _width = _struct.width*_widthScale;
-	var _height = _struct.height*_heightScale;
+	var _xPos = _uvs.xoffset;
+	var _yPos = _uvs.yoffset;
+	var _width = (_uvs.width)*_xScale;
+	var _height = (_uvs.height)*_yScale;
     
-    var _pLeft = _xPos*_widthScale, _pTop = _yPos*_heightScale, _pBottom = (_pTop + _height), _pRight = (_pLeft + _width);
+    var _pLeft = _xPos*_xScale, _pTop = _yPos*_yScale, _pBottom = (_pTop + _height), _pRight = (_pLeft + _width);
     
     var _x0 = _x + (-_pTop *  _cos + _pLeft * _sin);
     var _y0 = _y + (-_pTop * -_sin + _pLeft * _cos);

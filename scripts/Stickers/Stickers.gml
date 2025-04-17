@@ -146,7 +146,7 @@ function Stickers(_max, _distribute = false) constructor {
 		
 		var _struct = __global.spriteCache[? _spr];
 		var _imgID = _img % _struct.numFrames;
-		var _texID = _struct.texIDs[_imgID];
+		var _texID = _struct.uvs[_imgID].texture;
 		var _signX = sign(_x);
 		var _signY = sign(_y);
 		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
@@ -226,7 +226,9 @@ function Stickers(_max, _distribute = false) constructor {
 		}
 		__StickersSpritePrep(_vb.__buffer, _struct, _imgID, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
 		if (!__STICKERS_STORE_IMAGE_DATA) {
-			__stickerCount = 1;	
+			if (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_VERTICES_SIZE) {
+				_vb.__stickerCount++;
+			}
 		}
 		_vb.__cacheDirty = true;
 		__update = true;
