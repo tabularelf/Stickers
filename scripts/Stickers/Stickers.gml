@@ -185,16 +185,10 @@ function Stickers(_max, _distribute = false) constructor {
 			_vb.__imageData[_vb.__imageDataPos] ??= new __StickersImageDataClass(_vb, _bufferPos, _vb.__imageDataPos, _spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
 			_vb.__imageData[_vb.__imageDataPos].__UpdateSprite(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
 			_vb.__imageDataPos = (_vb.__imageDataPos + 1) % __maxStickers;
-			if (_undefinedImageData) && (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_VERTICES_SIZE) {
-				_vb.__stickerCount++;
-			}
 		}
+		
 		__StickersSpritePrep(_vb.__buffer, _struct, _imgID, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
-		if (!__STICKERS_STORE_IMAGE_DATA) {
-			if (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_VERTICES_SIZE) {
-				_vb.__stickerCount++;
-			}
-		}
+		_vb.__stickerCount++;
 		_vb.__cacheDirty = true;
 		__update = true;
 		return self;
