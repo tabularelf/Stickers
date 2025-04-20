@@ -127,17 +127,7 @@ function Stickers(_max, _distribute = false) constructor {
 	/// @param {Real} image
 	/// @param {Real} x
 	/// @param {Real} y
-	/// @param {Real} xScale
-	/// @param {Real} yScale
-	/// @param {Constant.Colour} color
-	/// @param {Real} alpha
-	/// @param {Real} depth
-	static Add = function(_spr, _img, _x, _y, _xscale = 1, _yscale = 1, _ang = 0, _col = c_white, _alpha = 1, _depth = 0) {
-		static _cacheX = 0;
-		static _cacheY = 0;
-		static _cacheTexID = -1;
-		static _cacheRegion = undefined;
-		
+	static AddSimple = function(_spr, _img, _x, _y) {
 		if (__destroyed) return;
 		
 		if (!ds_map_exists(__global.spriteCache, _spr)) {
@@ -147,73 +137,48 @@ function Stickers(_max, _distribute = false) constructor {
 		var _struct = __global.spriteCache[? _spr];
 		var _imgID = _img % _struct.numFrames;
 		var _texID = _struct.uvs[_imgID].texture;
-		var _signX = sign(_x);
-		var _signY = sign(_y);
-		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
-		var _yCell = ((_y div __regionHeight) * __regionHeight) - (_signY != -1 ? 0 : __regionHeight);
-		var _i =0;
-		var _j = 0;
-		var _vb = undefined;
-		var _region = undefined;
-		
-		if (_cacheTexID == _texID) && (_cacheX == _xCell) && (_cacheY == _xCell) && (_cacheRegion != undefined) {
-			if (!_cacheRegion.__destroyed) {
-				_i = 0;
-				repeat(array_length(_cacheRegion.__entries)) {
-					if (_cacheRegion.__entries[_i].__texID == _texID) {
-						_vb = _cacheRegion.__entries[_i];	
-						_region = _cacheRegion;
-						break;
-					}
-					++_i;
-				}
+		var _vb = __GetBufferClass(_x, _y, _spr, _texID, _imgID);
+		 
+		if (__STICKERS_STORE_IMAGE_DATA) {
+			var _undefinedImageData = _vb.__imageData[_vb.__imageDataPos] == undefined;
+			_vb.__imageData[_vb.__imageDataPos] ??= new __StickersImageDataClass(_vb, _bufferPos, _vb.__imageDataPos, _spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
+			_vb.__imageData[_vb.__imageDataPos].__UpdateSprite(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
+			_vb.__imageDataPos = (_vb.__imageDataPos + 1) % __maxStickers;
+			if (_undefinedImageData) && (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_VERTICES_SIZE) {
+				_vb.__stickerCount++;
 			}
 		}
-		
-		if (_vb == undefined) && (_region == undefined) {
-			_i = 0;
-			repeat(array_length(__regions)) {
-				if (__regions[_i].__x == _xCell) && (__regions[_i].__y == _yCell) {
-					_region = __regions[_i];	
-					_j = 0;
-					repeat(array_length(_region.__entries)) {
-						if (_region.__entries[_j].__texID == _texID) {
-							_vb = _region.__entries[_j];	
-							break;
-						}
-						++_j;
-					}
-					break;
-				}
-				++_i;
-			}
-			
-			if (_region == undefined) {
-				_region = new __StickersRegionClass(_xCell, _yCell, self);	
-				array_push(__regions, _region);
-			}
-			
-			if (_vb == undefined) {
-				_vb = _region.__AddEntry(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID));
-				//array_push(_region.__entries, _vb);
-				if (__distribute) {
-					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_VERTICES_SIZE;
-					_i = 0;
-					repeat(array_length(__regions)) {
-						__regions[_i].__SetMax(__maxDistributeSize);
-						++_i;	
-					}
-				}
+		__StickersSpritePrepSimple(_vb.__buffer, _struct, _imgID, _x, _y);
+		if (!__STICKERS_STORE_IMAGE_DATA) {
+			if (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_VERTICES_SIZE) {
+				_vb.__stickerCount++;
 			}
 		}
+		_vb.__cacheDirty = true;
+		__update = true;
+		return self;	
+	}
+	
+	/// @param {Asset.GMSprite} sprite
+	/// @param {Real} image
+	/// @param {Real} x
+	/// @param {Real} y
+	/// @param {Real} xScale
+	/// @param {Real} yScale
+	/// @param {Constant.Colour} color
+	/// @param {Real} alpha
+	/// @param {Real} depth
+	static Add = function(_spr, _img, _x, _y, _xscale = 1, _yscale = 1, _ang = 0, _col = c_white, _alpha = 1, _depth = 0) {
+		if (__destroyed) return;
 		
-		_cacheX = _xCell;
-		_cacheY = _yCell;
-		_cacheTexID = _texID;
-		_cacheRegion = _region;
+		if (!ds_map_exists(__global.spriteCache, _spr)) {
+			StickersPrecacheSprite(_spr);
+		}
 		
-		var _bufferPos = _vb.__stickerCount*__STICKERS_VFORMAT_VERTICES_SIZE % __maxDistributeSize;
-		buffer_seek(_vb.__buffer, buffer_seek_start, _bufferPos);	
+		var _struct = __global.spriteCache[? _spr];
+		var _imgID = _img % _struct.numFrames;
+		var _texID = _struct.uvs[_imgID].texture;
+		var _vb = __GetBufferClass(_x, _y, _spr, _texID, _imgID);
 		 
 		if (__STICKERS_STORE_IMAGE_DATA) {
 			var _undefinedImageData = _vb.__imageData[_vb.__imageDataPos] == undefined;
@@ -349,5 +314,80 @@ function Stickers(_max, _distribute = false) constructor {
 			}
 			++_i;
 		}
+	}
+	
+	static __GetBufferClass = function(_x, _y, _spr, _texID, _imgID) {
+		static _cacheX = 0;
+		static _cacheY = 0;
+		static _cacheTexID = -1;
+		static _cacheRegion = undefined;	
+		var _signX = sign(_x);
+		var _signY = sign(_y);
+		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
+		var _yCell = ((_y div __regionHeight) * __regionHeight) - (_signY != -1 ? 0 : __regionHeight);
+		var _i =0;
+		var _j = 0;
+		var _vb = undefined;
+		var _region = undefined;
+		
+		if (_cacheTexID == _texID) && (_cacheX == _xCell) && (_cacheY == _xCell) && (_cacheRegion != undefined) {
+			if (!_cacheRegion.__destroyed) {
+				_i = 0;
+				repeat(array_length(_cacheRegion.__entries)) {
+					if (_cacheRegion.__entries[_i].__texID == _texID) {
+						_vb = _cacheRegion.__entries[_i];	
+						_region = _cacheRegion;
+						break;
+					}
+					++_i;
+				}
+			}
+		}
+		
+		if (_vb == undefined) && (_region == undefined) {
+			_i = 0;
+			repeat(array_length(__regions)) {
+				if (__regions[_i].__x == _xCell) && (__regions[_i].__y == _yCell) {
+					_region = __regions[_i];	
+					_j = 0;
+					repeat(array_length(_region.__entries)) {
+						if (_region.__entries[_j].__texID == _texID) {
+							_vb = _region.__entries[_j];	
+							break;
+						}
+						++_j;
+					}
+					break;
+				}
+				++_i;
+			}
+			
+			if (_region == undefined) {
+				_region = new __StickersRegionClass(_xCell, _yCell, self);	
+				array_push(__regions, _region);
+			}
+			
+			if (_vb == undefined) {
+				_vb = _region.__AddEntry(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID));
+				//array_push(_region.__entries, _vb);
+				if (__distribute) {
+					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_VERTICES_SIZE;
+					_i = 0;
+					repeat(array_length(__regions)) {
+						__regions[_i].__SetMax(__maxDistributeSize);
+						++_i;	
+					}
+				}
+			}
+		}
+		
+		_cacheX = _xCell;
+		_cacheY = _yCell;
+		_cacheTexID = _texID;
+		_cacheRegion = _region;
+		
+		var _bufferPos = _vb.__stickerCount*__STICKERS_VFORMAT_VERTICES_SIZE % __maxDistributeSize;
+		buffer_seek(_vb.__buffer, buffer_seek_start, _bufferPos);	
+		return _vb;
 	}
 }

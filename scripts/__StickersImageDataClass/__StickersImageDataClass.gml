@@ -42,7 +42,7 @@ function __StickersImageDataClass(_owner, _pos, _arrayPos, _spr, _img, _x, _y, _
 		__UpdateSprite(_sprite, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
 		var _seek = buffer_tell(__owner.__buffer);
 		buffer_seek(__owner.__buffer, buffer_seek_start, __pos);
-		__StickersSpritePrep(__owner.__buffer, __struct, _img, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
+		__StickersSpritePrepSimple(__owner.__buffer, __struct, _img, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
 		buffer_seek(__owner.__buffer, buffer_seek_start, _seek);
 		
 		// Lol

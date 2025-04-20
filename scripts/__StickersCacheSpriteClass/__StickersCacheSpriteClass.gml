@@ -24,7 +24,11 @@ function __StickersCacheSpriteClass(_spr) constructor {
 			right: _uvs[2],
 			bottom: _uvs[3],
 			texture: _info.frames[_i].texture,
+			leftWidth: 0,
+			rightHeight: 0,
 		};
+		uvs[_i].leftWidth = -uvs[_i].xoffset + uvs[_i].width;
+		uvs[_i].rightHeight = -uvs[_i].yoffset + uvs[_i].height;
 		++_i;
 	}
 }

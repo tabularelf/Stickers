@@ -4,8 +4,9 @@
   "name": "Stickers",
   "resources": [
     {"id":{"name":"__StickersBufferClass","path":"scripts/__StickersBufferClass/__StickersBufferClass.yy",},"order":1,},
-    {"id":{"name":"__StickersSpritePrep","path":"scripts/__StickersSpritePrep/__StickersSpritePrep.yy",},"order":6,},
+    {"id":{"name":"__StickersSpritePrepSimple","path":"scripts/__StickersSpritePrepSimple/__StickersSpritePrepSimple.yy",},"order":6,},
     {"id":{"name":"__StickersVFormat","path":"scripts/__StickersVFormat/__StickersVFormat.yy",},"order":8,},
+    {"id":{"name":"__StickersSpritePrep","path":"scripts/__StickersSpritePrep/__StickersSpritePrep.yy",},"order":12,},
     {"id":{"name":"StickersClearCache","path":"scripts/StickersClearCache/StickersClearCache.yy",},"order":12,},
     {"id":{"name":"spr_a","path":"sprites/spr_a/spr_a.yy",},"order":1,},
     {"id":{"name":"__StickersRegionClass","path":"scripts/__StickersRegionClass/__StickersRegionClass.yy",},"order":10,},
