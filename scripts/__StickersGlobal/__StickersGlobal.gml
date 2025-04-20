@@ -1,6 +1,8 @@
-#macro __STICKERS_VFORMAT_SIZE 24*6
+#macro __STICKERS_VFORMAT_VERTICES_SIZE __STICKERS_VFORMAT_SIZE*6
+#macro __STICKERS_VFORMAT_SIZE 24
+
 #macro __STICKERS_CREDITS "@TabularElf - https://tabelf.link/"
-#macro __STICKERS_VERSION "v1.1.0"
+#macro __STICKERS_VERSION "v1.2.1"
 
 /// @ignore
 /// feather ignore all
@@ -9,11 +11,18 @@ function __StickersGlobal() {
 	
 	if (_inst == undefined) {
 		_inst = {
-			spriteCache: ds_map_create()
+			spriteCache: ds_map_create(),
+			newVertexFunctions: true
 		}	
 		
 		var _tags = tag_get_asset_ids("StickerDecal", asset_sprite);
 		script_execute_ext(StickersPrecacheSprite, _tags);
+		
+		try {
+			vertex_format_get_info(__StickersVFormat());	
+		} catch(_) {
+			_inst.newVertexFunctions = false;	
+		}
 	}
 	
 	return _inst;

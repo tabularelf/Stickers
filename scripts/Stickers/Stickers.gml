@@ -9,7 +9,7 @@ function Stickers(_max, _distribute = false) constructor {
 		__StickersError("Max stickers cannot be less than 1!");
 	}
 	__maxStickers = _max;
-	__maxSize = _max*__STICKERS_VFORMAT_SIZE;
+	__maxSize = _max*__STICKERS_VFORMAT_VERTICES_SIZE;
 	__regions = [];
 	__freeze = false;
 	__distribute = _distribute;
@@ -114,8 +114,8 @@ function Stickers(_max, _distribute = false) constructor {
 			__StickersError("Max stickers cannot be less than 1!");
 		}
 		__maxStickers = _max;	
-		__maxSize = __maxStickers*__STICKERS_VFORMAT_SIZE;
-		__maxDistributeSize = __distribute ? (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_SIZE : __maxSize;
+		__maxSize = __maxStickers*__STICKERS_VFORMAT_VERTICES_SIZE;
+		__maxDistributeSize = __distribute ? (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_VERTICES_SIZE : __maxSize;
 		var _i = 0;
 		repeat(array_length(__regions)) {
 			__regions[_i].__SetMax(__maxDistributeSize);
@@ -146,7 +146,7 @@ function Stickers(_max, _distribute = false) constructor {
 		
 		var _struct = __global.spriteCache[? _spr];
 		var _imgID = _img % _struct.numFrames;
-		var _texID = _struct.texIDs[_imgID];
+		var _texID = _struct.uvs[_imgID].texture;
 		var _signX = sign(_x);
 		var _signY = sign(_y);
 		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
@@ -194,10 +194,10 @@ function Stickers(_max, _distribute = false) constructor {
 			}
 			
 			if (_vb == undefined) {
-				_vb = _region.__AddEntry(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID)); //new __StickersBufferClass(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID), _xCell, _yCell, self);
+				_vb = _region.__AddEntry(__distribute ? 1 : __maxSize, _texID, sprite_get_texture(_spr, _imgID));
 				//array_push(_region.__entries, _vb);
 				if (__distribute) {
-					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_SIZE;
+					__maxDistributeSize = (max(ceil(__maxStickers / array_length(__regions)), 1))*__STICKERS_VFORMAT_VERTICES_SIZE;
 					_i = 0;
 					repeat(array_length(__regions)) {
 						__regions[_i].__SetMax(__maxDistributeSize);
@@ -212,12 +212,70 @@ function Stickers(_max, _distribute = false) constructor {
 		_cacheTexID = _texID;
 		_cacheRegion = _region;
 		
-		buffer_seek(_vb.__buffer, buffer_seek_start, _vb.__stickerCount*__STICKERS_VFORMAT_SIZE % __maxDistributeSize);	
+		var _bufferPos = _vb.__stickerCount*__STICKERS_VFORMAT_VERTICES_SIZE % __maxDistributeSize;
+		buffer_seek(_vb.__buffer, buffer_seek_start, _bufferPos);	
+		 
+		if (__STICKERS_STORE_IMAGE_DATA) {
+			var _undefinedImageData = _vb.__imageData[_vb.__imageDataPos] == undefined;
+			_vb.__imageData[_vb.__imageDataPos] ??= new __StickersImageDataClass(_vb, _bufferPos, _vb.__imageDataPos, _spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
+			_vb.__imageData[_vb.__imageDataPos].__UpdateSprite(_spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth);
+			_vb.__imageDataPos = (_vb.__imageDataPos + 1) % __maxStickers;
+			if (_undefinedImageData) && (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_VERTICES_SIZE) {
+				_vb.__stickerCount++;
+			}
+		}
 		__StickersSpritePrep(_vb.__buffer, _struct, _imgID, _x, _y, _depth, _xscale, _yscale, _ang, _col, _alpha);
-		++_vb.__stickerCount;
+		if (!__STICKERS_STORE_IMAGE_DATA) {
+			if (_vb.__stickerCount < __maxDistributeSize div __STICKERS_VFORMAT_VERTICES_SIZE) {
+				_vb.__stickerCount++;
+			}
+		}
 		_vb.__cacheDirty = true;
 		__update = true;
 		return self;
+	}
+	
+	static GetImageData = function(_x, _y, _leftPad = -128, _topPad = -128, _rightPad = 128, _bottomPad = 128, _sortByDepth = false) {
+		if (!__STICKERS_STORE_IMAGE_DATA) return __StickersError("Image data unavailable! Please set \"__STICKERS_STORE_IMAGE_DATA\" to true in __StickersConfig!");
+		//show_debug_message([_x, _y]);	
+		var _signX = sign(_x);
+		var _signY = sign(_y);
+		var _xCell = ((_x div __regionWidth) * __regionWidth) - (_signX != -1 ? 0 : __regionWidth);
+		var _yCell = ((_y div __regionHeight) * __regionHeight) - (_signY != -1 ? 0 : __regionHeight);
+		var _region = undefined;
+		var _results = [];
+		
+		var _i = 0;
+		repeat(array_length(__regions)) {
+			if (__regions[_i].__x == _xCell) && (__regions[_i].__y == _yCell) {
+				_region = __regions[_i];	
+				var _j = 0;
+				repeat(array_length(_region.__entries)) {
+					var _k = 0;
+					var _vb = _region.__entries[_j];
+					repeat(array_length(_vb.__imageData)) {
+						if (_vb.__imageData[_k] != undefined) {
+							var _imageData = _vb.__imageData[_k];
+							if (point_in_rectangle(_x, _y, _imageData.__x+_leftPad, _imageData.__y+_topPad, _imageData.__x+_rightPad, _imageData.__y+_bottomPad)) {
+								array_push(_results, _imageData);	
+							} 
+						}
+						++_k;
+					}	
+					++_j;
+				}
+			}
+			
+			++_i;
+		}
+		
+		if (_sortByDepth) {
+			array_sort(_results, function(_elmA, _elmB) {
+				return _elmA.__depth - _elmB.__depth;
+			});
+		}
+		
+		return _results;
 	}
 	
 	static Clear = function() {
