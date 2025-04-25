@@ -3,6 +3,11 @@
 function __StickersSpritePrepSimple(_buffer, _struct, _index, _x, _y) {
 	var _uvs = _struct.uvs[_index];
 	
+	if (__STICKERS_FLOOR_VERTEX_BUFFER_COORDS) {
+		_x = floor(_x);
+		_y = floor(_y);
+	}
+	
 	// Get UV info
 	var _left =	_uvs.left; 
 	var _top = _uvs.top;

@@ -28,6 +28,6 @@ function __StickersGlobal() {
 	
 	return _inst;
 }
-global.StickersGlobal = __StickersGlobal();
+__StickersGlobal();
 
 show_debug_message("Stickers: " + __STICKERS_VERSION + " initialized! By " + __STICKERS_CREDITS);

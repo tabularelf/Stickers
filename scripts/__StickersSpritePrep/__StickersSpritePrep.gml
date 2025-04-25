@@ -4,6 +4,12 @@ function __StickersSpritePrep(_buffer, _struct, _index, _x, _y, _z, _xScale, _yS
 	var _uvs = _struct.uvs[_index];
 	var _rgba = (_colour & 0xFFFFFF) | ((0xFF*_alpha) << 24);
 	
+	if (__STICKERS_FLOOR_VERTEX_BUFFER_COORDS) {
+		_x = floor(_x);
+		_y = floor(_y);
+		_z = floor(_z);
+	}
+	
 	// Get UV info
 	var _left =	_uvs.left; 
 	var _top = _uvs.top;
