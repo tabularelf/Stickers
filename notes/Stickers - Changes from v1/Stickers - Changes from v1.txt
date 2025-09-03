@@ -1,4 +1,4 @@
-# Stickers v2.0.5
+# Stickers v2.0.6
 ## Added
 - Lots of new config options!
 - Some of the config options were added due to no necessarily needing them 24/7. Others were added due to new features from below.

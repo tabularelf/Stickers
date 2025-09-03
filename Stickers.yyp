@@ -26,7 +26,7 @@
   },
   "name":"Stickers",
   "resources":[
-    {"id":{"name":"Changes from v1","path":"notes/Changes from v1/Changes from v1.yy",},},
+    {"id":{"name":"Stickers - Changes from v1","path":"notes/Stickers - Changes from v1/Stickers - Changes from v1.yy",},},
     {"id":{"name":"Object1","path":"objects/Object1/Object1.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"__StickersBufferClass","path":"scripts/__StickersBufferClass/__StickersBufferClass.yy",},},
