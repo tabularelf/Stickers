@@ -112,14 +112,18 @@
 
                             // CONSTRUCT DATA FOR OUR VERSION SELECTOR
                             const versionSelections = [];
-                            versionSelections.push({ text: 'v' + config.latestVersion, value: config.latestVersion, isDefault: true });
-                            for (const version of config.otherVersions) {
-                                versionSelections.push({
-                                    text: 'v' + version,
-                                    value: version,
-                                    isDefault: false,
-                                });
-                            }
+                            versionSelections.push({
+								text: 'Latest (v' + config.latestVersion + ')',
+								value: config.latestVersion,
+								isDefault: true,
+							});
+							for (const version of config.otherVersions) {
+								versionSelections.push({
+									text: 'v' + version,
+									value: version,
+									isDefault: false,
+								});
+							}
 
                             // POPULATE VERSION SELECTOR DROP DOWN
                             versionSelections.map((version, index) => {

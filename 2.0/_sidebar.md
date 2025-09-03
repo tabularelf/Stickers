@@ -6,3 +6,4 @@
 - [Stickers().Get*](stickers-get.md)
 - [Stickers().Set*](stickers-set.md)
 - [General](general.md)
+- [Config](configuration.md)

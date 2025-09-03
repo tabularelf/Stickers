@@ -16,7 +16,7 @@ Stickers is vertex buffer-based decal solution for GameMaker, by updating a buff
 
 |  Windows  |  MacOSX  |  Linux  |  iOS  |  Android  |  HTML5  |  Opera GX  |  Console  |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
+| ✔ | ✔ | ✔ | ✔ | ✔ | ❌ | ✔ | ✔ |
 
 
 # License
