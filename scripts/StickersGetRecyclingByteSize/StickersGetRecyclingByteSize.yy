@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"StickersGetRecyclingByteSize",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"StickersGetRecyclingByteSize",
+  "parent":{
+    "name":"Stickers",
+    "path":"folders/Stickers.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,72 +1,138 @@
+// Feather ignore all
 /// @ignore
-/// feather ignore all
-function __StickersBufferClass(_max, _texID, _texPtr, _x, _y, _owner, _regionOwner) constructor {
-	static __global = __StickersGlobal();
-	static __vFormat = __StickersVFormat();
-	__owner = _owner;
-	// We need to store two versions of the texture ID... All because of HTML5. This is utterly stupid. Thanks YYG! /s
-	__texID = _texID;
-	__texPtr = _texPtr;
-	__cacheDirty = false;
-	__buffer = buffer_create(_max, buffer_fixed, 1);
-	__vbuffer = -1;
-	__stickerCount = 0;
-	__maxSize = _max;
-	__imageData = (__STICKERS_STORE_IMAGE_DATA) ? array_create(_owner.__maxStickers, undefined) : undefined;
-	__imageDataPos = 0;
-	__regionOwner = _regionOwner;
-	
-	static __Destroy = function() {
-		if (buffer_exists(__buffer)) {
-			buffer_delete(__buffer);
-			__buffer = -1;
-		}
-		
-		if (__vbuffer != -1) {
-			vertex_delete_buffer(__vbuffer);
-			__vbuffer = -1;
-		}
-		
-		if (__STICKERS_STORE_IMAGE_DATA) array_resize(__imageData, 0);
+function __StickersBufferClass(_frozened, _size, _texId, _texPtr, _owner, _regionOwner) constructor {
+	static _recycler = __StickersGlobal().vBuffRecycler;
+	static _copyVBuff = __STICKERS_STACK_ON_TOP ? vertex_create_buffer() : undefined;
+	__format = __StickersVFormat();
+	__writeVBuff = vertex_create_buffer_ext(144);
+	__mainVBuff = vertex_create_buffer_ext(_size*144);
+	__freezeVBuff = undefined;
+	__HardReset(_frozened, _size, _texId, _texPtr, _owner, _regionOwner);
+	if (__STICKERS_ALLOW_EXPORT) {
+		__imageIndex = array_create(_size);
 	}
 	
-	static __Update = function() {
-		if (__cacheDirty) {
-			if (__global.newVertexFunctions) {
-				if (__vbuffer == -1) {
-					__vbuffer = vertex_create_buffer_from_buffer(__buffer, __vFormat);
-				} 
+	if (__STICKERS_STORE_IMAGE_DATA) {
+		__imageData = array_create(_size, undefined);
+	}
+
+	static __HardReset = function(_frozened, _size, _texId, _texPtr, _owner, _regionOwner) {
+		__owner = _owner;
+		__regionOwner = _regionOwner;
+		__destroyed = false;
+		__texId = _texId;
+		__texPtr = _texPtr;
+		__size = _size;
+		__verticeSize = __size * __STICKERS_VERTICE_COUNT;
+		__frozened = _frozened;
+		__dirty = false;
+		__pos = 0;
+		__startPos = 0;
+		__loopedOnce = false;
+		vertex_begin(__mainVBuff, __format);
+		vertex_position_3d(__mainVBuff, 0, 0, 0);
+		vertex_color(__mainVBuff, 0, 0);
+		vertex_texcoord(__mainVBuff, 0, 0);
+		
+		vertex_position_3d(__mainVBuff, 0, 0, 0);
+		vertex_color(__mainVBuff, 0, 0);
+		vertex_texcoord(__mainVBuff, 0, 0);
+		
+		vertex_position_3d(__mainVBuff, 0, 0, 0);
+		vertex_color(__mainVBuff, 0, 0);
+		vertex_texcoord(__mainVBuff, 0, 0);
+		vertex_end(__mainVBuff);
+
+		vertex_begin(__writeVBuff, __format);
+		vertex_position_3d(__writeVBuff, 0, 0, 0);
+		vertex_color(__writeVBuff, 0, 0);
+		vertex_texcoord(__writeVBuff, 0, 0);
+		
+		vertex_position_3d(__writeVBuff, 0, 0, 0);
+		vertex_color(__writeVBuff, 0, 0);
+		vertex_texcoord(__writeVBuff, 0, 0);
+		
+		vertex_position_3d(__writeVBuff, 0, 0, 0);
+		vertex_color(__writeVBuff, 0, 0);
+		vertex_texcoord(__writeVBuff, 0, 0);
+		vertex_end(__writeVBuff);
+
+		return self;
+	}
+
+	static __TryUpdate = function() {
+		if (__destroyed) return;
+		if (__dirty) {
+			vertex_end(__writeVBuff);
+			__dirty = false;
+
+			if (!is_undefined(__freezeVBuff)) {
+				vertex_delete_buffer(__freezeVBuff);
+				__freezeVBuff = undefined;
+			}
+
+			if (__STICKERS_STACK_ON_TOP) && (__loopedOnce) {
+				// Doing a lot of vertex buffer trickery to allow stacking decals on top of one another...
+				// Wow!
+				var _offset = ((__pos*__STICKERS_VERTICE_COUNT)-__startPos);
+				var _offsetWithSize = max(__verticeSize - _offset, 0);
+				vertex_update_buffer_from_vertex(_copyVBuff, 0, __mainVBuff, 0, __verticeSize);
 				
-				if (__owner.__freeze) {
-					vertex_delete_buffer(__vbuffer);
-				 	__vbuffer = vertex_create_buffer_from_buffer(__buffer, __vFormat);
-				} else {
-					vertex_update_buffer_from_buffer(__vbuffer, 0, __buffer)
-				}
+				if (_offsetWithSize != 0) vertex_update_buffer_from_vertex(__mainVBuff, 0, _copyVBuff, _offset, _offsetWithSize);
+
+
+				vertex_update_buffer_from_vertex(__mainVBuff, _offsetWithSize, __writeVBuff);
 			} else {
-				if (__vbuffer != -1) {
-					vertex_delete_buffer(__vbuffer);
-				}
-				
-				__vbuffer = vertex_create_buffer_from_buffer(__buffer, __vFormat);
+				vertex_update_buffer_from_vertex(__mainVBuff, __startPos, __writeVBuff);
 			}
 			
-			__cacheDirty = false;
-			if (__owner.__freeze) {
-				vertex_freeze(__vbuffer);	
-			}
 		}
 	}
-	
-	static __Draw = function() {
-		if (__stickerCount <= 0) return;
-		// Dynamic texture pages seem to do just fine as long as you at least prefetch before submitting a vertex buffer.
-		// As it'll invoke the fallback sprite in place for a frame. Interesting nonetheless!
-		
-		if (!texture_is_ready(__texID)) {
-			texture_prefetch(__texID);
+
+	static __Cleanup = function() {
+		vertex_delete_buffer(__writeVBuff);
+		vertex_delete_buffer(__mainVBuff);
+	}
+
+	static __Destroy = function() {
+		if (__regionOwner.__cacheVBuffer == self) {
+			__regionOwner.__cacheVBuffer = undefined;
+		}
+		__regionOwner = undefined;
+		__owner = undefined;
+		if (!__STICKERS_RECYCLE_VERTEX_BUFFERS) {
+			__Cleanup();
+		} else {
+			array_push(_recycler, self);
+		}
+		if (!is_undefined(__freezeVBuff)) {
+			vertex_delete_buffer(__freezeVBuff);
+			__freezeVBuff = undefined;
 		}
 		
-		if (__vbuffer != -1) vertex_submit(__vbuffer, pr_trianglelist, __texPtr);	
+		__destroyed = true;
+	}
+
+	static __Draw = function() {
+		if (__destroyed) return;
+		__TryUpdate();
+
+		if (__STICKERS_AUTO_FETCH_TEXTURE) {
+			if (!texture_is_ready(__texId)) {
+				texture_prefetch(__texId);
+			}
+		}
+
+		if (__frozened) {
+			if (is_undefined(__freezeVBuff)) {
+				__freezeVBuff = vertex_create_buffer();
+				vertex_update_buffer_from_vertex(__freezeVBuff, 0, __mainVBuff);
+				vertex_freeze(__freezeVBuff);
+			}
+			
+			vertex_submit(__freezeVBuff, pr_trianglelist, __texPtr);
+		} else {
+			vertex_submit(__mainVBuff, pr_trianglelist, __texPtr);
+		}
 	}
 }

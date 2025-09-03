@@ -1,13 +1,17 @@
-/// feather ignore all
-/// @func StickersPrecacheSprite(...)
-/// @param {Asset.GMSprite} sprite
-function StickersPrecacheSprite() {
-	static __global = __StickersGlobal();
+/// @param {Asset.GMSprite} sprite The sprite to precache ahead of time.
+/// @param {Asset.GMSprite} ...
+// Feather ignore all
+function StickersPrecacheSprite(_sprite) {
+	static _spriteCache = __StickersGlobal().spriteCache;
+	var _cache = _spriteCache;
 	var _i = 0;
 	repeat(argument_count) {
-		var _spr = argument[_i];
-		if (!ds_map_exists(__global.spriteCache, _spr)) {
-			__global.spriteCache[? _spr] = new __StickersCacheSpriteClass(_spr);
+		_sprite = argument[_i];
+		if (__STICKERS_PRECACHE_VALIDATE_SPRITE) && ((!is_handle(_sprite)) || (!sprite_exists(_sprite))) {
+			__StickersError($"Received an invalid type from argument {_i}. Got \"{typeof(_sprite)}\", expected, \"ref sprite\".")
+		}
+		if (!ds_map_exists(_cache, _sprite)) {
+			_cache[? _sprite] = new __StickersSpriteCacheClass(_sprite);
 		}
 		++_i;
 	}

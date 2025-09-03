@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__StickersBufferClass",
-  "isDnD": false,
-  "isCompatibility": false,
-  "parent": {
-    "name": "I'm shy :(",
-    "path": "folders/Stickers/System/Please don't look/I'm shy :(.yy",
+  "$GMScript":"v1",
+  "%Name":"__StickersBufferClass",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__StickersBufferClass",
+  "parent":{
+    "name":"Classes",
+    "path":"folders/Stickers/System/Please don't look/I'm shy :(/Classes.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

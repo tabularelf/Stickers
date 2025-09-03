@@ -1,0 +1,3 @@
+draw_rectangle_color(0, 0, 256, 128, c_black, c_black, c_black, c_black, false);
+
+draw_text(8, 32, $"Region count: {decals.GetRegionCount()}\nVbuffer count: {decals.GetVBufferCount()}\nFrames: {frame}\nRelease mode: {releaseMode ? "true" : "false"}\nCombined: {(decals.GetByteSize() + StickersGetRecyclingByteSize()) / 1024 / 1024}MB\nByte size: {decals.GetByteSize() / 1024 / 1024}MB\nRecycler Byte size: {StickersGetRecyclingByteSize() / 1024 / 1024}MB\nStickers: {decals.GetSize()}")

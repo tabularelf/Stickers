@@ -1,5 +1,5 @@
 /// @ignore
-/// feather ignore all
+// Feather ignore all
 function __StickersError(_str) {
-	show_error("Stickers: " + _str, true);
+	show_error($"Stickers v{__STICKERS_VERSION}: " + _str +"\n", true);
 }

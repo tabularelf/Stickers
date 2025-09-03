@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "Stickers",
-  "isDnD": false,
-  "isCompatibility": false,
-  "parent": {
-    "name": "Stickers",
-    "path": "folders/Stickers.yy",
+  "$GMScript":"v1",
+  "%Name":"Stickers",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Stickers",
+  "parent":{
+    "name":"Stickers",
+    "path":"folders/Stickers.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }
