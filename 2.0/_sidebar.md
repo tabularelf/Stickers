@@ -4,7 +4,6 @@
 **API Reference**
 - [Stickers()](stickers.md)
 - [Stickers().Get*](stickers-get.md)
-- [Stickers().Set*](stickers-set.md)
 - [Region](region.md)
 - [General](general.md)
 - [Config](configuration.md)
