@@ -1,4 +1,4 @@
-# Stickers
+# Stickers()
 
 ### `Stickers(maxDecals, [width], [height], [frozen], [name])`
 

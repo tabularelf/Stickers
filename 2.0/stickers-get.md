@@ -1,3 +1,5 @@
+# Stickers().Get*
+
 ### `.GetName()`
 
 Returns: `String`.
