@@ -1,18 +1,58 @@
-# Stickers
+# Region
 
-### `Stickers(maxDecals, [width], [height], [frozen], [name])`
+Regions are Stickers equivalent to chunks in some systems, where all of the vertex buffers per coordinate are stored. With the introduction of `.GetRegion()` and `.GetRegions()`, you can now access these underlying regions.
 
-Returns: An instance of `Stickers`.
+The following below is all of the methods exposed.
+
+### `.GetX()`
+
+Returns: `Real`.
 
 |Name|Datatype|Purpose|
 |---|---|---|
-|`maxDecals`|`Real`|Max number of decals per region.|
-|`width`|`Real`|Width of each region. Default is `1024`.|
-|`height`|`Real`|Height of each region. Default is `1024`.|
-|`frozen`|`Bool`|Whether vertex buffers should be frozened or not. (Recommended for a extremely large sticker count.) Default is `false`.|
-|`name`|`String`|The name of the Stickers instance. Used explicitly for debugging purposes. Default is `""`.|
+|`N/A`|||
 
-Constructor, creates a new instance of `Stickers` to be used for storing the regions and vertex buffers for all of your decals.
+Returns the x coordinate of the region.
+
+### `.GetY()`
+
+Returns: `Real`.
+
+|Name|Datatype|Purpose|
+|---|---|---|
+|`N/A`|||
+
+Returns the y coordinate of the region.
+
+### `.GetWidth()`
+
+Returns: `Real`.
+
+|Name|Datatype|Purpose|
+|---|---|---|
+|`N/A`|||
+
+Returns the width of the region.
+
+### `.GetHeight()`
+
+Returns: `Real`.
+
+|Name|Datatype|Purpose|
+|---|---|---|
+|`N/A`|||
+
+Returns the height of the region.
+
+### `.GetOwner()`
+
+Returns: `Instance of Stickers`.
+
+|Name|Datatype|Purpose|
+|---|---|---|
+|`N/A`|||
+
+Returns the Stickers instance that owns the region, if any.
 
 ### `.Add(sprite_index, image_index, x, y, [angle], [colour], [alpha], [z])`
 
@@ -33,6 +73,8 @@ Returns: `self`.
 
 Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `xscale`, `yscale`, `angle`, `colour`, `alpha` and `z` may be specified. Depending on the arguments filled, `.Add()` will attempt to call whichever `.Add*()` function that is necessary, potentially giving an optimized enough path. Should you know exactly what you need, it is highly suggested to use the other `.Add*()` functions down below, as they may be faster overall.
 
+?> Clamping is applied to ensure that the sprites fit within the region boundaries.
+
 ### `.AddBasic(sprite_index, image_index, x, y)`
 
 Returns: `self`.
@@ -45,6 +87,8 @@ Returns: `self`.
 |`y`|`Real`|The y coordinate to place the sprite.|
 
 Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments.
+
+?> Clamping is applied to ensure that the sprites fit within the region boundaries.
 
 ### `.AddSimple(sprite_index, image_index, x, y, [colour], [alpha])`
 
@@ -60,6 +104,8 @@ Returns: `self`.
 |`alpha`|`Real`|The alpha to set for the sprite. Defaults to `1`.|
 
 Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `colour` and `alpha` may be specified.
+
+?> Clamping is applied to ensure that the sprites fit within the region boundaries.
 
 ### `.AddSimpleAngle(sprite_index, image_index, x, y, [angle], [colour], [alpha])`
 
@@ -77,6 +123,8 @@ Returns: `self`.
 
 Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `angle`, `colour` and `alpha` may be specified.
 
+?> Clamping is applied to ensure that the sprites fit within the region boundaries.
+
 ### `.AddFull(sprite_index, image_index, x, y, [angle], [colour], [alpha], [z])`
 
 Returns: `self`.
@@ -92,9 +140,11 @@ Returns: `self`.
 |`angle`|`Real`|The angle to rotate the sprite as. Defaults to `0`|
 |`colour`|`Real` or `Constant.Colour`|The colour of the sprite. Defaults to `c_white`.|
 |`alpha`|`Real`|The alpha to set for the sprite. Defaults to `1`.|
-|`z`|`Real`|The z coordinate (or depth) to place the sprite, if depth testing is enabled. Defaults to `0`.|-
+|`z`|`Real`|The z coordinate (or depth) to place the sprite, if depth testing is enabled. Defaults to `0`.|
 
 Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `xscale`, `yscale`, `angle`, `colour`, `alpha` and `z` may be specified.
+
+?> Clamping is applied to ensure that the sprites fit within the region boundaries.
 
 ### `.Clear()`
 
@@ -104,7 +154,7 @@ Returns: `self`.
 |---|---|---|
 |`N/A`|||
 
-Clears the entire Stickers instance of all of its regions and underlying vertex buffers.
+Clears the entire Stickers region and underlying vertex buffers.
 
 ### `.Destroy()`
 
@@ -114,74 +164,14 @@ Returns: `N/A`.
 |---|---|---|
 |`N/A`|||
 
-Destroys the Stickers instance, clearing all regions and vertex buffers.
+Destroys the Stickers region, clearing all regions and vertex buffers.
 
-### `.ClearFromDistance(x, y, [dinstance])`
-
-Returns: `self`.
-
-|Name|Datatype|Purpose|
-|---|---|---|
-|`x`|`Real`|The x coordinate to check from.|
-|`y`|`Real`|The y coordinate to check from.|
-|`distance`|`Real`|How far the distance from the x and y coordinate before regions are cleared. Default is `width` + `padding width`.|
-
-Clears all Sticker regions and underlying vertex buffers, if they exceed the specified distance. This can be applied automatically via `__STICKERS_REMOVE_REGIONS_OUT_OF_DRAW_RADIUS` and `__STICKERS_DRAW_RADIUS_REGIONS_LENGTH` configs respectively.
-
-### `.ClearRegion(x, y)`
+### `.Draw()`
 
 Returns: `self`.
 
 |Name|Datatype|Purpose|
 |---|---|---|
-|`x`|`Real`|The x coordinate to check from.|
-|`y`|`Real`|The y coordinate to check from.|
+|`N/A`|||
 
-Clears a region from the provided `x` and `y` coordinate, if any are found.
-
-### `.ClearRegionExt(x, y, width, height)`
-
-Returns: `self`.
-
-|Name|Datatype|Purpose|
-|---|---|---|
-|`x`|`Real`|The x coordinate to start clearing from.|
-|`y`|`Real`|The y coordinate to start clearing from.|
-|`width`|`Real`|The width to end clearing from.|
-|`height`|`Real`|The height to end clearing from.|
-
-Clears all regions within the selected `x` and `y` coordinate, to their respective `width` and `height`.
-
-### `.Sort(x, y)`
-
-Returns: `self`.
-
-|Name|Datatype|Purpose|
-|---|---|---|
-|`x`|`Real`|The x coordinate to sort from.|
-|`y`|`Real`|The y coordinate to sort from.|
-
-Sorts all regions based on manhattan distance. This primiarily is used to speed up with fetching the closest Stickers region when it comes to adding a new decal with `.Add*().` This can be automatically called by the config `__STICKERS_OPTIMIZE_APPEND`.
-
-### `.Draw(x, y, width, height)`
-
-Returns: `self`.
-
-|Name|Datatype|Purpose|
-|---|---|---|
-|`x`|`Real`|The x coordinate to start from.|
-|`y`|`Real`|The y coordinate to start from.|
-|`width`|`Real`|The width coordinate to end from.|
-|`height`|`Real`|The height coordinate to end from.|
-
-Renders all regions and their vertex buffer contents that are within view.
-
-### `.DrawCamera([camera])`
-
-Returns: `self`.
-
-|Name|Datatype|Purpose|
-|---|---|---|
-|`camera`|`Id.Camera`|The camera to fetch from. Defaults to `view_camera[view_current]`.|
-
-Fetches the `x`, `y`, `width` and `height` of the camera and passes it along to `.Draw()`.
+Draws the stickers region.
