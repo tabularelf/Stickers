@@ -31,7 +31,7 @@ Returns: `self`.
 |`alpha`|`Real`|The alpha to set for the sprite. Defaults to `1`.|
 |`z`|`Real`|The z coordinate (or depth) to place the sprite, if depth testing is enabled. Defaults to `0`.|
 
-Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `xscale`, `yscale`, `angle`, `colour`, `alpha` and `z` may be specified. Depending on the arguments filled, `.Add()` will attempt to call whichever `.Add*()` function that is necessary, potentially giving an optimized enough path. Should you know exactly what you need, it is highly suggested to use the other `.Add*()` functions down below, as they may be faster overall.
+Places a decal with the supplied `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `xscale`, `yscale`, `angle`, `colour`, `alpha` and `z` may be specified. Depending on the arguments filled, `.Add()` will attempt to call whichever `.Add*()` function that is necessary, potentially giving an optimized enough path. Should you know exactly what you need, it is highly suggested to use the other `.Add*()` functions down below, as they may be faster overall.
 
 ### `.AddBasic(sprite_index, image_index, x, y)`
 
@@ -44,7 +44,7 @@ Returns: `self`.
 |`x`|`Real`|The x coordinate to place the sprite.|
 |`y`|`Real`|The y coordinate to place the sprite.|
 
-Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments.
+Places a decal with the supplied `sprite_index`, `image_index`, `x` and `y` arguments.
 
 ### `.AddSimple(sprite_index, image_index, x, y, [colour], [alpha])`
 
@@ -59,7 +59,7 @@ Returns: `self`.
 |`colour`|`Real` or `Constant.Colour`|The colour of the sprite. Defaults to `c_white`.|
 |`alpha`|`Real`|The alpha to set for the sprite. Defaults to `1`.|
 
-Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `colour` and `alpha` may be specified.
+Places a decal with the supplied `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `colour` and `alpha` may be specified.
 
 ### `.AddSimpleAngle(sprite_index, image_index, x, y, [angle], [colour], [alpha])`
 
@@ -75,7 +75,7 @@ Returns: `self`.
 |`colour`|`Real` or `Constant.Colour`|The colour of the sprite. Defaults to `c_white`.|
 |`alpha`|`Real`|The alpha to set for the sprite. Defaults to `1`.|
 
-Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `angle`, `colour` and `alpha` may be specified.
+Places a decal with the supplied `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `angle`, `colour` and `alpha` may be specified.
 
 ### `.AddFull(sprite_index, image_index, x, y, [angle], [colour], [alpha], [z])`
 
@@ -94,7 +94,7 @@ Returns: `self`.
 |`alpha`|`Real`|The alpha to set for the sprite. Defaults to `1`.|
 |`z`|`Real`|The z coordinate (or depth) to place the sprite, if depth testing is enabled. Defaults to `0`.|-
 
-Places a decal with the suppled `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `xscale`, `yscale`, `angle`, `colour`, `alpha` and `z` may be specified.
+Places a decal with the supplied `sprite_index`, `image_index`, `x` and `y` arguments. Optionally `xscale`, `yscale`, `angle`, `colour`, `alpha` and `z` may be specified.
 
 ### `.Clear()`
 

@@ -10,7 +10,7 @@ Returns: `N/A`.
 
 Clears the sprite data cache completely.
 
-### `StickersClearCache()`
+### `StickersClearCacheSprite()`
 
 Returns: `N/A`.
 
