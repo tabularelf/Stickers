@@ -8,15 +8,17 @@ function __StickersBufferClass(_frozened, _size, _texId, _texPtr, _owner, _regio
 	__mainVBuff = vertex_create_buffer_ext(_size*144);
 	__freezeVBuff = undefined;
 	__HardReset(_frozened, _size, _texId, _texPtr, _owner, _regionOwner);
+
 	if (__STICKERS_ALLOW_EXPORT) {
 		__imageIndex = array_create(_size);
 	}
-	
-	if (__STICKERS_STORE_IMAGE_DATA) {
-		__imageData = array_create(_size, undefined);
-	}
 
 	static __HardReset = function(_frozened, _size, _texId, _texPtr, _owner, _regionOwner) {
+		__imageData = undefined;
+		__hasImageData = _owner.__hasImageData;
+		if (__hasImageData) {
+			__imageData = array_create(_size, undefined);
+		}
 		__owner = _owner;
 		__regionOwner = _regionOwner;
 		__destroyed = false;
@@ -100,6 +102,7 @@ function __StickersBufferClass(_frozened, _size, _texId, _texPtr, _owner, _regio
 		}
 		__regionOwner = undefined;
 		__owner = undefined;
+		__imageData = undefined;
 		if (!__STICKERS_RECYCLE_VERTEX_BUFFERS) {
 			__Cleanup();
 		} else {

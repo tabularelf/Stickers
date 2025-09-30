@@ -1,8 +1,8 @@
 // Feather ignore all
 
-#macro __STICKERS_VERSION "2.0.6"
+#macro __STICKERS_VERSION "2.0.7"
 
-#macro __STICKERS_DATE "31th July 2025"
+#macro __STICKERS_DATE "30th September 2025"
 
 #macro __STICKERS_CREDITS "@TabularElf - https://tabelf.link/"
 
@@ -69,6 +69,10 @@ function __StickersGlobal() {
 
 	var _tags = tag_get_asset_ids("StickerDecal", asset_sprite);
 	StickersPrecacheSpriteExt(_tags);
+
+	if (__STICKERS_STORE_IMAGE_DATA) && (__STICKERS_STACK_ON_TOP) {
+		__StickersError($"Cannot have both \"{nameof(__STICKERS_STORE_IMAGE_DATA)}\" and\n \"{nameof(__STICKERS_STACK_ON_TOP)}\" enabled! Please disable one of them under \"{nameof(__StickersConfig)}\"!")
+	}
 
 	return _inst;
 }

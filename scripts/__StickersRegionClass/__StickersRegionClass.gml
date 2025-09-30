@@ -139,7 +139,7 @@ function __StickersRegionClass(_x, _y, _owner) constructor {
 			if (is_numeric(_z)) _z = floor(_z);
 		}
 
-		if (__STICKERS_STORE_IMAGE_DATA) { 
+		if (__STICKERS_STORE_IMAGE_DATA) && (_buffer.__hasImageData) { 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size] ??= new __StickersImageDataClass(_buffer, _buffer.__pos, _sprite, _index, _x, _y, _xScale ?? 1, _yScale ?? 1, _angle ?? 0, _col, _alpha, _z ?? 0); 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size].__UpdateSprite(_sprite, _index, _x, _y, _xScale ?? 1, _yScale ?? 1, _angle ?? 0, _col, _alpha, _z ?? 0); 
 		} 
@@ -227,7 +227,7 @@ function __StickersRegionClass(_x, _y, _owner) constructor {
 			_y = floor(_y);
 		}
 
-		if (__STICKERS_STORE_IMAGE_DATA) { 
+		if (__STICKERS_STORE_IMAGE_DATA) && (_buffer.__hasImageData) { 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size] ??= new __StickersImageDataClass(_buffer, _buffer.__pos, _sprite, _index, _x, _y, 1, 1, 0, _col, _alpha, 0); 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size].__UpdateSprite(_sprite, _index, _x, _y, 1, 1, 0, _col, _alpha, 0); 
 		} 
@@ -285,7 +285,7 @@ function __StickersRegionClass(_x, _y, _owner) constructor {
 			_y = floor(_y);
 		}
 
-		if (__STICKERS_STORE_IMAGE_DATA) { 
+		if (__STICKERS_STORE_IMAGE_DATA) && (_buffer.__hasImageData) { 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size] ??= new __StickersImageDataClass(_buffer, _buffer.__pos, _sprite, _index, _x, _y, 1, 1, 0, c_white, 1, 0); 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size].__UpdateSprite(_sprite, _index, _x, _y, 1, 1, 0, c_white, 1, 0); 
 		} 
@@ -337,7 +337,7 @@ function __StickersRegionClass(_x, _y, _owner) constructor {
 			_y = floor(_y);
 		}
 
-		if (__STICKERS_STORE_IMAGE_DATA) { 
+		if (__STICKERS_STORE_IMAGE_DATA) && (_buffer.__hasImageData) { 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size] ??= new __StickersImageDataClass(_buffer, _buffer.__pos, _sprite, _index, _x, _y, 1, 1, 0, _col, _alpha, 0); 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size].__UpdateSprite(_sprite, _index, _x, _y, 1, 1, _angle, _col, _alpha, 0); 
 		} 
@@ -394,7 +394,7 @@ function __StickersRegionClass(_x, _y, _owner) constructor {
 			_z = floor(_z);
 		}
 
-		if (__STICKERS_STORE_IMAGE_DATA) { 
+		if (__STICKERS_STORE_IMAGE_DATA) && (_buffer.__hasImageData) { 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size] ??= new __StickersImageDataClass(_buffer, _buffer.__pos, _sprite, _index, _x, _y, 1, 1, 0, _col, _alpha, 0); 
 			_buffer.__imageData[_buffer.__pos % _buffer.__size].__UpdateSprite(_sprite, _index, _x, _y, _xScale, _yScale, _angle, _col, _alpha, 0); 
 		} 

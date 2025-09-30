@@ -1,4 +1,5 @@
 decals = new Stickers(1024, , , false, "Generic").SetDebug(true);
+//decals.SetImageData(true);
 frame = 0;
 texturegroup_set_mode(false);
 show_debug_overlay(true, true);

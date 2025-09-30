@@ -1,11 +1,11 @@
 // Feather ignore all
 /// @ignore
-function __StickersImageDataClass(_owner, _arrayPos, _spr, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth) constructor {
+function __StickersImageDataClass(_owner, _arrayPos, _sprite, _img, _x, _y, _xscale, _yscale, _ang, _col, _alpha, _depth) constructor {
 	static __staticSpriteCache = __StickersGlobal().spriteCache;
 	__spriteCache = __staticSpriteCache;
 	var _spriteInfo = __StickersCacheGetSprite(_sprite);
-	__uvs = _spriteInfo.GetUvs(_img);
-	__sprite_index = _spr;
+	__uvs = _spriteInfo.GetUVs(_img);
+	__sprite_index = _sprite;
 	__image_index = _img;
 	__x = _x;
 	__y = _y;

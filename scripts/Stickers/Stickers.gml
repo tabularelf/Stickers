@@ -22,12 +22,23 @@ function Stickers(_size, _regionWidth = 1024, _regionHeight = 1024, _frozen = fa
 	__regionHCell = (__regionHeight div 2)  + __paddingHeight;
 	__lastSortTime = 0;
 	__destroyed = false;
+	__hasImageData = false;
 	__name = _name;
 
 	/// @param {Bool} value The state of debug mode you wish to set.
 	/// @self
 	static SetDebug = function(_value) {
 		__debug = _value;
+		return self;
+	}
+
+	static SetImageData = function(_value) {
+		if (!__STICKERS_STORE_IMAGE_DATA) {
+			__StickersError($"\"{nameof(__STICKERS_STORE_IMAGE_DATA)}\" is not enabled! Please enable it under \"{nameof(__StickersConfig)}\"!")
+			return;
+		}
+		Clear();
+		__hasImageData = true;
 		return self;
 	}
 
@@ -232,8 +243,8 @@ function Stickers(_size, _regionWidth = 1024, _regionHeight = 1024, _frozen = fa
 	/// @return {Array<Struct.__StickersImageDataClass>}
 	static GetImageData = function(_x, _y, _leftPad = -128, _topPad = -128, _rightPad = 128, _bottomPad = 128, _sortByDepth = false, _array = []) {
 		if (__destroyed) return;
-		if (!__STICKERS_STORE_IMAGE_DATA) {
-			__StickersError($"Cannot fetch image data as \"{nameof(__STICKERS_STORE_IMAGE_DATA)}\" is disabled!\nPlease enable it from \"{nameof(__StickersConfig)}\"!");
+		if (!__STICKERS_STORE_IMAGE_DATA) || (!__hasImageData) {
+			__StickersError($"Cannot fetch image data as \"{nameof(__STICKERS_STORE_IMAGE_DATA)}\" is disabled,\n and or \"{nameof(SetImageData())}\" wasn't set to \"true\"!");
 			return;
 		}
 
@@ -474,7 +485,9 @@ function Stickers(_size, _regionWidth = 1024, _regionHeight = 1024, _frozen = fa
 					var _vertexSize = buffer_read(_importBuff, buffer_u64);
 					_entry.__mainVBuff = vertex_create_buffer_from_buffer_ext(_importBuff, _entry.__format, buffer_tell(_importBuff), _vertexNum);
 					buffer_seek(_importBuff, buffer_seek_relative, _vertexSize);
-					if (__STICKERS_STORE_IMAGE_DATA) {
+
+					__hasImageData = buffer_read(_importBuff, buffer_bool);
+					if (__STICKERS_STORE_IMAGE_DATA) && (__hasImageData) {
 						var _k = 0;
 						if (is_array(_spritesStruct.imageInfoData)) {
 							repeat(array_length(_spritesStruct.imageInfoData)) {
@@ -560,7 +573,8 @@ function Stickers(_size, _regionWidth = 1024, _regionHeight = 1024, _frozen = fa
 				array_map_ext(_data, sprite_get_name);
 				var _imageInfoData = undefined;
 
-				if (__STICKERS_STORE_IMAGE_DATA) {
+				buffer_write(_exportBuff, buffer_bool, __hasImageData);
+				if (__STICKERS_STORE_IMAGE_DATA) && (__hasImageData) {
 					_imageInfoData = array_create(__size, undefined);
 					var _k = 0;
 					repeat(array_length(_entry.__imageData)) {
