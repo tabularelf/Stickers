@@ -1,0 +1,32 @@
+# Stickers v2.0.6
+## Added
+- Lots of new config options!
+- Some of the config options were added due to no necessarily needing them 24/7. Others were added due to new features from below.
+- `.ClearFromDistance(x, y, [distance])` - Clears regions that are too far away from the supplied x/y coordinate. Default distance is the region width + padding width.
+- A config variant exists for autoremoving regions that are too far, when `.Draw()` or `.DrawCamera()` is called.
+- `.Export()` - Exports Stickers instance as a buffer. (Requires a config toggle!)
+- `.Import(buffer)` - Imports a Sticker instance buffer. (Requires a config toggle!)
+- `.GetByteSize()` - Returns the current byte size of all of the Sticker regions & vertex buffers for the instance.
+- `.SortRegions(x, y)` - Sorts regions to try and fetch the closest region to the new `.Add*` call.
+- A config variant exists for autosorting on each `.Add*` call periodically.
+- Vertex Buffer recyling. Vertex buffers can now be reused as they are cleared/discarded. Particularly useful when you have a high stickers count.
+- A config exists to disable this.
+- `StickersClearRecycling()` - Added as per above to allow clearing out vertex buffers whenever necessary.
+- `StickersGetRecyclingByteSize()` - Gets the current size of the recycling bin for the vertex buffers, in bytes.
+- `.DrawCamera([camera])` - Draws from the provided camera. Default is assigned the current view camera.
+- `.AddBasic(sprite_index, image_index, x, y)` - Adds a very basic sprite, with no scale, colour, depth or angle. 
+- `.AddSimple(sprite_index, image_index, x, y, [colour], [alpha])` - Adds a very simple sprite, with no scale, depth or angle. Defaults  are `c_white`, `1`.
+- `.AddSimpleAngle(sprite_index, image_index, x, y, [angle], [colour], [alpha])` - Adds a simple sprite, with no scale or depth. Defaults are `0`, `c_white`, `1`.
+- `.AddFull(sprite_index, image_index, x, y, [xscale], [yscale], [angle], [colour], [alpha], [depth])` - Adds a sprite with full parameters. Defaults are `1`, `1`, `0`, `c_white`, `1`, `0`.
+## Changed
+- Made region size static on creation.
+- Made freezing static on creation.
+- As per above, the new arguments for `Stickers` is as follows. `new Stickers(MaxStickers, [regionWidth], [regionHeight], [freeze])
+- Removed default arguments for `.Draw()`, in favour of `.DrawCamera()`.
+- Optimized `.Add()` so it tries to take the shortest path possible. (For when one is unsure what specific sprite they need.)
+- Note: The other `.Add*()` methods are MUCH faster than calling `.Add()` in almost all cases, but provide an OK middleground.
+- The underlying buffer system has been changed to purely a 2 vertex buffer system, with a optional third vertex buffer for frozen Sticker instances. Adding a significant performance improvement.
+## Removed
+- Distrbution is no longer supported.
+- Manual update is no longer supported. (This is now always on, due to optimizations made to the vertex buffer system).
+- `.Update()` is now removed as per above.

@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "StickersClearCache",
-  "isDnD": false,
-  "isCompatibility": false,
-  "parent": {
-    "name": "Stickers",
-    "path": "folders/Stickers.yy",
+  "$GMScript":"v1",
+  "%Name":"StickersClearCache",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"StickersClearCache",
+  "parent":{
+    "name":"Stickers",
+    "path":"folders/Stickers.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

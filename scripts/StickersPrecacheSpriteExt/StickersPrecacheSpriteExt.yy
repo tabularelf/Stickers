@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"StickersPrecacheSpriteExt",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"StickersPrecacheSpriteExt",
+  "parent":{
+    "name":"Stickers",
+    "path":"folders/Stickers.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

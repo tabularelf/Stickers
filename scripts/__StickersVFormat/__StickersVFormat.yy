@@ -1,11 +1,13 @@
 {
-  "resourceType": "GMScript",
-  "resourceVersion": "1.0",
-  "name": "__StickersVFormat",
-  "isDnD": false,
-  "isCompatibility": false,
-  "parent": {
-    "name": "I'm shy :(",
-    "path": "folders/Stickers/System/Please don't look/I'm shy :(.yy",
+  "$GMScript":"v1",
+  "%Name":"__StickersVFormat",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__StickersVFormat",
+  "parent":{
+    "name":"I'm shy :(",
+    "path":"folders/Stickers/System/Please don't look/I'm shy :(.yy",
   },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

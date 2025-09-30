@@ -1,6 +1,7 @@
-/// feather ignore all
-/// @func StickersClearCache()
+// Feather ignore all
+
+/// @description Clears all sprites from the cache.
 function StickersClearCache() {
-	static __global = __StickersGlobal();
-	ds_map_clear(__global.spriteCache);
+	static _spriteCache = __StickersGlobal().spriteCache;
+	ds_map_clear(_spriteCache);
 }
