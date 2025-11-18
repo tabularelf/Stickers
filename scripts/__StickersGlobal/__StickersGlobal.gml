@@ -68,7 +68,9 @@ function __StickersGlobal() {
 	};
 
 	var _tags = tag_get_asset_ids("StickerDecal", asset_sprite);
-	StickersPrecacheSpriteExt(_tags);
+	if (array_length(_tags) > 0) { 
+		StickersPrecacheSpriteExt(_tags);
+	}
 
 	if (__STICKERS_STORE_IMAGE_DATA) && (__STICKERS_STACK_ON_TOP) {
 		__StickersError($"Cannot have both \"{nameof(__STICKERS_STORE_IMAGE_DATA)}\" and\n \"{nameof(__STICKERS_STACK_ON_TOP)}\" enabled! Please disable one of them under \"{nameof(__StickersConfig)}\"!")
