@@ -1,8 +1,8 @@
 // Feather ignore all
 
-#macro __STICKERS_VERSION "2.0.7"
+#macro __STICKERS_VERSION "2.0.8"
 
-#macro __STICKERS_DATE "30th September 2025"
+#macro __STICKERS_DATE "18th November 2025"
 
 #macro __STICKERS_CREDITS "@TabularElf - https://tabelf.link/"
 
