@@ -5,5 +5,6 @@
 
 &nbsp;
 
+- ### [Documentation](https://www.tabularelf.com/Stickers/)
 - ### [Download the .yymps](https://github.com/tabularelf/Stickers/releases/)
 - ### Talk about Stickers on [GameMaker Kitchen Discord Server](https://discord.gg/8krYCqr)
